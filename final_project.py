@@ -4,6 +4,9 @@
 # CSE 160
 # Homework 7: Final project
 
+"""Working currently on trying to organize by area of the US."""
+
+
 import csv 
 from operator import itemgetter
 
