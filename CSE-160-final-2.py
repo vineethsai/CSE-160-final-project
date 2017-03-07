@@ -1,76 +1,80 @@
 
 import pandas as pd
 import numpy as np
-# get_ipython().magic(u'matplotlib inline')
-# import matplotlib.pyplot as plt
-# import seaborn as sns
-# plt.rcParams["figure.figsize"] = (18,7)
+import matplotlib.pyplot as plt
+import seaborn as sns
+plt.rcParams["figure.figsize"] = (18,7)
 import csv 
 from operator import itemgetter
 
+df = pd.read_csv("crime_dataset.csv", low_memory=False)
+hdata = df[df['Victim Age']!=998]
+unsolved = df[df["Crime Solved"] != "Yes"]
+dict_states = {'Alaska': 'AK', 'Alabama': 'AL', 'Arkansas': 'AR', 'Arizona': 'AZ', 'California': 'CA', 'Colorado': 'CO',
+               'Connecticut': 'CT',
+               'District of Columbia': 'DC', 'Delaware': 'DE', 'Florida': 'FL', 'Georgia': 'GA', 'Hawaii': 'HI',
+               'Iowa': 'IA',
+               'Idaho': 'ID', 'Illinois': 'IL', 'Indiana': 'IN', 'Kansas': 'KS', 'Kentucky': 'KY', 'Louisiana': 'LA',
+               'Massachusetts': 'MA', 'Maryland': 'MD', 'Maine': 'ME', 'Michigan': 'MI', 'Minnesota': 'MN',
+               'Missouri': 'MO',
+               'Mississippi': 'MS', 'Montana': 'MT', 'North Carolina': 'NC', 'North Dakota': 'ND', 'Nebraska': 'NE',
+               'New Hampshire': 'NH', 'New Jersey': 'NJ', 'New Mexico': 'NM', 'Nevada': 'NV', 'New York': 'NY',
+               'Ohio': 'OH',
+               'Oklahoma': 'OK', 'Oregon': 'OR', 'Pennsylvania': 'PA', 'Puerto Rico': 'PR', 'Rhode Island': 'RI',
+               'South Carolina': 'SC', 'South Dakota': 'SD', 'Tennessee': 'TN', 'Texas': 'TX', 'Utah': 'UT',
+               'Virginia': 'VA', 'Vermont': 'VT', 'Washington': 'WA', 'Wisconsin': 'WI', 'West Virginia': 'WV',
+               'Wyoming': 'WY'}
+abb_st = [val for val in dict_states.values()]
+unsolved_handgun = unsolved[unsolved["Weapon"]=="Handgun"]
+handgun = df[df["Weapon"]=="Handgun"]
 
 def visual():
 
-    df = pd.read_csv("crime_dataset.csv", low_memory = False)
-
-
-    # In[80]:
-
+    # Deaths Attributable to Various Weapons
     df["Weapon"].value_counts().plot(kind = "bar", color = "LightGreen")
-    plt.title('Deaths Attributable to Various Weapons')
+    plt.title('Deaths Attributed to Various Weapons')
+    plt.savefig("weapons.png")
+    plt.clf()
 
+    # Graph showing number of incidents for different Victim Ages
+    hdata["Victim Age"].value_counts().sort_index(ascending=True).plot(kind = "bar", color = "purple")
+    plt.title('Graph showing number of incidents for different Victim Ages')
+    plt.savefig("victim_age.png")
+    plt.clf()
 
-    # In[83]:
-
-    hdata = df[df['Victim Age']!=998]
-    hdata["Victim Age"].value_counts().plot(kind = "bar", color = "purple")
-
-
-    # In[78]:
-
-
-
-
-# In[90]:
-
+    # Number of Unsolved Homicides: 1980 to 2014
     unsolved['Year'].value_counts().sort_index(ascending=True).plot(kind='line', color = "Red")
     plt.title('Number of Unsolved Homicides: 1980 to 2014')
+    plt.savefig("unsolved_hom.png")
+    plt.clf()
 
-
-    # In[4]:
-
-    dict_states = {'Alaska':'AK','Alabama':'AL','Arkansas':'AR','Arizona':'AZ', 'California':'CA', 'Colorado':'CO', 'Connecticut':'CT',
-    'District of Columbia':'DC', 'Delaware':'DE', 'Florida':'FL', 'Georgia':'GA', 'Hawaii':'HI', 'Iowa':'IA',
-    'Idaho':'ID', 'Illinois':'IL', 'Indiana':'IN', 'Kansas':'KS', 'Kentucky':'KY', 'Louisiana':'LA',
-    'Massachusetts':'MA', 'Maryland':'MD', 'Maine':'ME', 'Michigan':'MI', 'Minnesota':'MN', 'Missouri':'MO',
-    'Mississippi':'MS', 'Montana':'MT', 'North Carolina':'NC', 'North Dakota':'ND', 'Nebraska':'NE',
-    'New Hampshire':'NH', 'New Jersey':'NJ', 'New Mexico':'NM', 'Nevada':'NV', 'New York':'NY', 'Ohio':'OH',
-    'Oklahoma':'OK', 'Oregon':'OR', 'Pennsylvania':'PA', 'Puerto Rico':'PR', 'Rhode Island':'RI',
-    'South Carolina':'SC', 'South Dakota':'SD', 'Tennessee':'TN', 'Texas':'TX', 'Utah':'UT',
-    'Virginia':'VA', 'Vermont':'VT', 'Washington':'WA', 'Wisconsin':'WI', 'West Virginia':'WV', 'Wyoming':'WY'}
-    abb_st = [val for val in dict_states.values()]
-    unsolved = df[df["Crime Solved"] != "Yes"]
-    # plt.rcParams["figure.figsize"] = (12,4)
-    ax = sns.countplot(x="State", hue="Weapon", data=unsolved[unsolved["Weapon"]=="Handgun"])
+    # Unsolved Homicides Caused By Handguns
+    ax = sns.countplot(x="State", hue="Weapon", data=unsolved_handgun,  palette = "colorblind")
     ax.set_xticklabels(abb_st)
     plt.title("Unsolved Homicides Caused By Handguns")
+    plt.savefig("unsolved_hom_handgun.png")
+    plt.clf()
 
 
-    # In[6]:
+    # Unsolved Homicides for different race in various states
 
-    ax1 = sns.countplot(x="State", hue="Victim Race", data=unsolved[unsolved["Weapon"]=="Handgun"], palette = "colorblind")
+    ax1 = sns.countplot(x="State", hue="Victim Race", data=unsolved_handgun, palette = "colorblind")
     ax1.set_xticklabels(abb_st)
     ax1.legend(loc = 'upper right')
     plt.title("Unsolved Homicides for different race in various states")
-    # sns.palplot(sns.color_palette("colorblind", 10))
+    plt.savefig("unsolved_hom_race_state.png")
+    plt.clf()
 
 
-    # In[7]:
 
-    ax3 = sns.pairplot( hue="Weapon", data=df[df["Weapon"]=="Handgun"], palette = "colorblind")
+    # Handgun
 
+    ax2 = sns.pairplot( hue="Weapon", data=handgun, palette = "colorblind")
+    ax2.titlle("handgun")
+    ax2.savefig("weapons_handgun.png")
+    ax2.clf()
 
-    # In[8]:
+    #
 
     ax3 = sns.countplot(x = "Year", hue="Weapon", data=df[df["Weapon"]=="Handgun"], palette = "colorblind")
 
@@ -80,51 +84,58 @@ def visual():
     ax4 = sns.countplot(x = "Year", hue="Incident", data=df)
 
 
-# In[21]:
-
-
-
-
     # In[68]:
 
     unsolved['Weapon'].value_counts().plot(kind='bar')
 
 
-    # In[69]:
+    # Bar graph of unsolved cases per year to count
 
     unsolved['Year'].value_counts().plot(kind='bar')
+    plt.title("Bar graph of unsolved cases per year to count")
+    plt.savefig("unsolved_year.png")
+    plt.clf()
 
 
-    # In[70]:
+    # Bar graph of unsolved cases victim sex to the type of weapon used
 
     rel = unsolved['Weapon'].groupby(unsolved['Victim Sex'])
     rel.size().plot(kind='bar')
+    plt.title("Bar graph of unsolved cases victim sex to the type of weapon used")
+    plt.savefig("unsolved_weapon_sex.png")
+    plt.clf()
 
-
-    # In[71]:
+    # Bar graph of unsolved cases for various victim races to the month of incident
 
     unsolved["Month"].value_counts().plot(kind="bar")
+    plt.title("Bar graph of unsolved cases for various victim races to the month of incident")
+    plt.savefig("unsolved_month.png")
+    plt.clf()
 
-
-# In[47]:
-
-
-    # In[72]:
+    # Plot of number of unsolved incidents for various victim races
 
     unsolved['Victim Race'].value_counts().plot(kind='bar')
+    plt.title("Bar graph of unsolved cases for various victim races to number of incidents")
+    plt.savefig("unsolved_race.png")
+    plt.clf()
 
 def details():
 
-    df = df = pd.read_csv("crime_dataset.csv", low_memory = False)
-    hdata = df[df['Victim Age'] != 998]
-    print df["Relationship"].value_counts()
+
+    relationship = df[df["Relationship"]!= "Unknown"]
+    vic_age = df[df['Victim Age'] != 998]
+    print "Number of Incidents for different types of relationships"
+    print relationship["Relationship"].value_counts()
 
     print
 
     print "Top 10 Victim ages"
-    print hdata["Victim Age"].value_counts()[0:10]
+    print vic_age["Victim Age"].value_counts()[0:10]
 
     print
+
+    print "Number of Incidents for different types of Weapons"
     print df['Weapon'].value_counts()
 
-details()
+# details()
+visual()

@@ -53,7 +53,7 @@ for name, group in d4.groupby(level=0):
 handles, labels = ax.get_legend_handles_labels()
 ax.legend(handles, labels)
 plt.title('Crime solving rate by victim race')
-plt.show()
+# plt.show()
 
 
 # In[ ]:
