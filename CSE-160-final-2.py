@@ -66,41 +66,6 @@ def visual():
     plt.savefig("unsolved_hom_handgun.png")
     plt.clf()
 
-
-    # Unsolved Homicides for different race in various states
-
-    ax1 = sns.countplot(x = "State", hue = "Victim Race", data = unsolved_handgun, palette =
-    "colorblind")
-    ax1.set_xticklabels(abb_st)
-    ax1.legend(loc = 'upper right')
-    plt.title("Unsolved Homicides for different race in various states")
-    plt.savefig("unsolved_hom_race_state.png")
-    plt.clf()
-
-
-
-    # Handgun
-
-    ax2 = sns.pairplot( hue="Weapon", data = handgun, palette = "colorblind")
-    ax2.titlle("handgun")
-    ax2.savefig("weapons_handgun.png")
-    ax2.clf()
-
-    # Graph of use of handguns over time
-
-    ax3 = sns.countplot(x = "Year", hue = "Weapon", data = df[df["Weapon"]=="Handgun"], palette =
-    "colorblind")
-    ax3.title("graph of use of handguns over time")
-    ax3.savefig("handgun_time.png")
-    ax3.clf()
-
-    # Plot shows number of incidents over time
-
-    ax4 = sns.countplot(x = "Year", hue = "Incident", data=df)
-    ax4.title("Plot shows number of incidents over time")
-    ax4.savefig("incidents_time.png")
-    ax4.clf()
-
     # Bar graph of unsolved homicides for various weapons
 
     unsolved['Weapon'].value_counts().plot(kind='bar')
@@ -114,7 +79,6 @@ def visual():
     plt.title("Bar graph of unsolved cases per year to count")
     plt.savefig("unsolved_year.png")
     plt.clf()
-
 
     # Bar graph of unsolved cases victim sex to the type of weapon used
 
@@ -138,6 +102,39 @@ def visual():
     plt.savefig("unsolved_race.png")
     plt.clf()
 
+
+    # Unsolved Homicides for different race in various states
+
+    ax1 = sns.countplot(x = "State", hue = "Victim Race", data = unsolved_handgun, palette =
+    "colorblind")
+    ax1.set_xticklabels(abb_st)
+    ax1.legend(loc = 'upper right')
+    plt.title("Unsolved Homicides for different race in various states")
+    plt.savefig("unsolved_hom_race_state.png")
+    plt.clf()
+
+
+    # Graph of use of handguns over time
+
+    ax2 = sns.countplot(x = "Year", hue = "Weapon", data = df[df["Weapon"]=="Handgun"], palette =
+    "colorblind")
+    ax2.legend(loc = 'upper right')
+    plt.title("graph of use of handguns over time")
+    plt.savefig("handgun_time.png")
+    plt.clf()
+
+
+    # Plot shows number of incidents over time
+
+    ax3 = sns.countplot(x = "Year", hue = "Incident", data=df)
+    ax3.legend_.remove()
+    plt.title("Plot shows number of incidents over time")
+    plt.savefig("incidents_time.png")
+    plt.clf()
+
+
+
+
 def details():
 
 
@@ -156,5 +153,15 @@ def details():
     print "Number of Incidents for different types of Weapons"
     print df['Weapon'].value_counts()
 
-# details()
+def get_plot():
+
+    user_plot = raw_input("which year do you want your plot to show? ")
+    plot_data =  df[df["Year"] == int(user_plot)]
+    # ax4 = sns.countplot(x="Month", hue ="Incident", data = plot_data)
+    plot_data.sort_index(ascending = True).plot(kind="bar",x = "Month",  y = "Incident", color="purple")
+    plt.savefig("user_input_2.png")
+    plt.show()
+
+get_plot()
 visual()
+details()
