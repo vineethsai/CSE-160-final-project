@@ -10,7 +10,8 @@ from collections import OrderedDict
 import matplotlib.pyplot as plt
 import pylab
 
-
+plt.rcParams["figure.figsize"] = (18, 7)
+pylab.rcParams["figure.figsize"] = (18, 7)
 def extract_rows(filename):
     """ Opens file, appends each row (as dictionary) into list"""
 
@@ -182,12 +183,15 @@ def spike_check_visual(year_data):
             if (y_val[i]*1.27) <= (y_val[i+1]):
                 print "There is a spike from ", x_val[i],"to", x_val[1+i], input_year
 
-
+        pylab.clf()
         pylab.figure(1)
         x = range(12)
         pylab.xticks(x, x_val)
         pylab.plot(x, y_val, "g")
-        pylab.savefig("C:\Users\Vineeth\Desktop\CSE-160-final-project\yearly\incidents_"+str(input_year)+".png")
+        pylab.title("Graph showing number of incidents per month for the year "+input_year)
+        pylab.ylabel("Number of Incidents")
+        pylab.xlabel("Months")
+        pylab.savefig("yearly\incidents_"+str(input_year)+".png")
 
 
 

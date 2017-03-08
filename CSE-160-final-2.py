@@ -7,7 +7,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-
 import numpy as np
 import csv
 from operator import itemgetter
@@ -15,96 +14,65 @@ from operator import itemgetter
 plt.rcParams["figure.figsize"] = (18, 7)
 
 
-def get_data(filename):
+def get_data_as_df(filename):
+    """
+    reads in the data
+    :param filename: name of the csv file
+    :return: reads the data as a data frame
+    """
     data = pd.read_csv(filename, low_memory=False)
     return data
 
-def graph_affected_ages(hdata):
-    # Graph showing number of incidents for different Victim Ages
+def graph_affected_ages(age_clean_data):
+    """
+    Graph showing number of incidents for different Victim Ages
+    :param age_clean_data: cleaned data frame where age != 998 or 99
+    :return: None
+    :Side effects: Saves graph of affected ages
+    """
 
-    hdata["Victim Age"].value_counts().sort_index(ascending=True).plot(kind="bar", color="purple")
+    age_clean_data["Victim Age"].value_counts().sort_index(ascending=True).plot(kind="bar", color="purple")
     plt.title('Graph showing number of incidents for different Victim Ages')
-    plt.savefig("victim_age.png")
+    plt.savefig("graphs\\victim_age.png")
     plt.clf()
 
-def graph_affected_sexes():
-    pass
+def graph_affected_sexes(data_frame):
+    """
+    graphs the affected sexes
+    :param data_frame: data frame to be graphed
+    :return: None
+    :side effects: Saves graph of affected sexes
+    """
 
-def graph_affected_races():
-    pass
+    data_frame['Victim Sex'].value_counts().plot(kind='bar')
+    plt.title("Bar graph of victim sexes to number of incidents")
+    plt.savefig("graphs\\number_hom_sex.png")
+    plt.clf()
 
-def graph_total_incidence_for_year(year, data):
-    """Takes input of year, plots graph of number of incidences of
-    homicide per month for that year. Returns none."""
-    assert (int(year) >= 1980 and int(year) <= 2014), "Please choose a year inside the range of the data!"
-
-    plot_data = data[data["Year"] == int(year)]
-    plot_data["Month"].value_counts().sort_index(ascending=True).plot(kind="bar", color="purple")
-    plt.savefig("user_input_2.png")
-    print "***Graph plotted, please close graph window to continue***"
-    plt.show()
-
-def graph_affected_race_for_month():
-    """input month and year and it'll show you a bar graph of
-    affected races in that month, we can see if there is an increase
-    in crimes against a specific race in the month with the spike"""
-    pass
-
-def graph_weapons_over_time():
-    # Graph of use of handguns over time
-    ax2 = sns.countplot(x="Year", hue="Weapon", data=df[df["Weapon"] == "Handgun"], palette=
+def graph_affected_races(data_frame):
+    """
+    graphs the effected races
+    :param data_frame: data frame to be graphed
+    :return: None
+    :side effects: Saves graph of affected races
+    """
+    ax1 = sns.countplot(x="Victim Race", hue="Victim Race", data=data_frame, palette=
     "colorblind")
-    ax2.legend(loc='upper right')
-    plt.title("graph of use of handguns over time")
-    plt.savefig("handgun_time.png")
+    ax1.legend(loc='upper right')
+    # data_frame['Victim Race'].value_counts().plot(kind='bar')
+    plt.title("Count of Homicides for different race ")
+    plt.savefig("graphs\unsolved_hom_race_state.png")
     plt.clf()
 
-def main():
-    data = get_data("crime_dataset.csv")
 
-    # Graph incidences over every month in a chosen year
-    year = raw_input("Which year do you want your plot to show? ")
-    graph_total_incidence_for_year(year, data)
-
-    # Graph affected victim ages
-    hdata = data[data['Victim Age'] != 998]
-    graph_affected_ages(hdata)
-
-    # Prints three most affected relationships between perp. and victim.
-    relationship = data[data["Relationship"] != "Unknown"]
-    print "Number of Incidents for different types of relationships"
-    print relationship["Relationship"].value_counts()[0:3]
-    print
-
-    # Prints three most affected victim ages
-    vic_age = data[data['Victim Age'] != 998]
-    print "Top 3 Victim ages"
-    print vic_age["Victim Age"].value_counts()[0:3]
-    print
-
-    # print "Number of Incidents for different types of Weapons"
-    # print data['Weapon'].value_counts()
-
-if __name__ == "__main__":
-    main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""
-    unsolved = data[data["Crime Solved"] != "Yes"]
-
+def graph_affected_race_for_state(data_frame):
+    """
+    input month and year and it'll show you a bar graph of
+    affected races in that month, we can see if there is an increase
+    in crimes against a specific race in the month with the spike
+    :param data_frame: data frame to be graphed
+    :return:None
+    """
     dict_states = {
         'Alaska': 'AK', 'Alabama': 'AL', 'Arkansas': 'AR', 'Arizona': 'AZ', 'California': 'CA', 'Colorado': 'CO',
         'Connecticut': 'CT', 'District of Columbia': 'DC', 'Delaware': 'DE', 'Florida': 'FL', 'Georgia': 'GA',
@@ -120,96 +88,53 @@ if __name__ == "__main__":
     }
 
     abb_st = [val for val in dict_states.values()]
-    unsolved_handgun = unsolved[unsolved["Weapon"] == "Handgun"]
-    handgun = data[data["Weapon"] == "Handgun"]
-"""
 
-"""___________________________________________________________________________________________________________"""
-
-"""
-    # Deaths Attributable to Various Weapons
-    df["Weapon"].value_counts().plot(kind = "bar", color = "LightGreen")
-    plt.title('Deaths Attributed to Various Weapons')
-    plt.savefig("weapons.png")
-    plt.clf()
-"""
-
-"""
-    # Plot shows number of incidents over time
-    ax3 = sns.countplot(x = "Year", hue = "Incident", data=df)
-    ax3.legend_.remove()
-    plt.title("Plot shows number of incidents over time")
-    plt.savefig("incidents_time.png")
-    plt.clf()
-"""
-
-"""
-    # Number of Unsolved Homicides: 1980 to 2014
-    unsolved['Year'].value_counts().sort_index(ascending = True).plot(kind = 'line', color = "Red")
-    plt.title('Number of Unsolved Homicides: 1980 to 2014')
-    plt.savefig("unsolved_hom.png")
-    plt.clf()
-"""
-
-"""
-    # Unsolved Homicides Caused By Handguns
-    ax = sns.countplot(x = "State", hue = "Weapon", data = unsolved_handgun,  palette =
+    ax6 = sns.countplot(x="State", hue="Victim Race", data=data_frame, palette=
     "colorblind")
-    ax.set_xticklabels(abb_st)
-    plt.title("Unsolved Homicides Caused By Handguns")
-    plt.savefig("unsolved_hom_handgun.png")
+    ax6.set_xticklabels(abb_st)
+    ax6.legend(loc='upper right')
+    plt.title("Homicides for different race in various states")
+    plt.savefig("graphs\hom_race_state.png")
     plt.clf()
-"""
 
-"""
-    # Bar graph of unsolved homicides for various weapons
-    unsolved['Weapon'].value_counts().plot(kind='bar')
-    plt.title("Bar graph of unsolved homicides for various weapons")
-    plt.savefig("unsolved_weapon.png")
-    plt.clf()
-"""
+def graph_weapons_handgun_over_time(data_frame):
+    """
+    Graph of use of handguns over time
+    :return: None
+    :side effect: save a graph showing use of handguns over time
+    """
 
-"""
-    # Bar graph of unsolved cases per year to count
-    unsolved['Year'].value_counts().plot(kind='bar')
-    plt.title("Bar graph of unsolved cases per year to count")
-    plt.savefig("unsolved_year.png")
-    plt.clf()
-"""
-
-"""
-    # Bar graph of unsolved cases victim sex to the type of weapon used
-    rel = unsolved['Weapon'].groupby(unsolved['Victim Sex'])
-    rel.size().plot(kind='bar')
-    plt.title("Bar graph of unsolved cases victim sex to the type of weapon used")
-    plt.savefig("unsolved_weapon_sex.png")
-    plt.clf()
-"""
-
-"""
-    # Bar graph of unsolved cases for various victim races to the month of incident
-    unsolved["Month"].value_counts().plot(kind="bar")
-    plt.title("Bar graph of unsolved cases for various victim races to the month of incident")
-    plt.savefig("unsolved_month.png")
-    plt.clf()
-"""
-
-"""
-    # Plot of number of unsolved incidents for various victim races
-    unsolved['Victim Race'].value_counts().plot(kind='bar')
-    plt.title("Bar graph of unsolved cases for various victim races to number of incidents")
-    plt.savefig("unsolved_race.png")
-    plt.clf()
-"""
-
-"""
-    # Unsolved Homicides for different race in various states
-    ax1 = sns.countplot(x = "State", hue = "Victim Race", data = unsolved_handgun, palette =
+    ax2 = sns.countplot(x="Year", hue="Weapon", data=data_frame[data_frame["Weapon"] == "Handgun" ], palette=
     "colorblind")
-    ax1.set_xticklabels(abb_st)
-    ax1.legend(loc = 'upper right')
-    plt.title("Unsolved Homicides for different race in various states")
-    plt.savefig("unsolved_hom_race_state.png")
+    ax2.legend(loc='upper right')
+    plt.title("graph of use of handguns over time")
+    plt.savefig("graphs\handgun_time.png")
     plt.clf()
-"""
+
+def main():
+
+    data_frame = get_data_as_df("crime_dataset.csv")
+
+
+    # Graph affected victim ages
+    age_clean_data = data_frame[data_frame['Victim Age'] != 998]
+    age_clean_data=age_clean_data[age_clean_data['Victim Age'] != 99]
+    graph_affected_ages(age_clean_data)
+
+    # graphs weapon over time
+    graph_weapons_handgun_over_time(data_frame)
+
+    # graphs affected sex
+    graph_affected_sexes(data_frame)
+
+    # graphs affected races
+    graph_affected_races(data_frame)
+
+    graph_affected_race_for_state(data_frame)
+
+if __name__ == "__main__":
+    main()
+
+
+
 
