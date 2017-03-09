@@ -170,8 +170,8 @@ def spike_check_visual(year_data):
         spike_years = list()
 
         # Order the months in chronological order so when graphing, it does not display randomly
-        month = ["January", ="February=", ="March=", ="April=", ="May=", ="June=", ="July=", ="August=", ="September=",
-                 "October", ="November=", "December"]
+        month = ["January", "February", "March", "April", "May", "June", "July", "August", "September",
+                 "October", "November", "December"]
         for items in month_data:
             for i in range(12):
                 if items[0] == month[i]:
@@ -270,7 +270,7 @@ def graph_affected_race_for_state(data_frame):
 
     abb_st = [val for val in dict_states.values()]
 
-    ax6 = sns.countplot(x="State", hue="Victim Race", data=data_frame, palette=
+    ax6 = sns.countplot(x = "State", hue = "Victim Race", data = data_frame, palette =
     "colorblind")
     ax6.set_xticklabels(abb_st)
     ax6.legend(loc='upper right')
@@ -289,8 +289,8 @@ def graph_weapons_handgun_over_time(data_frame):
     Returns:
         None, saves graph.
     """
-    ax2 = sns.countplot(x="Year", hue="Weapon", data=data_frame[data_frame["Weapon"] == "Handgun"], 
-                        palette="colorblind")
+    ax2 = sns.countplot(x = "Year", hue = "Weapon", data = data_frame[data_frame["Weapon"] == "Handgun"],
+                        palette = "colorblind")
     ax2.legend(loc='upper right')
     plt.title("Use of Handguns over Time")
     plt.xlabel("Years")
