@@ -14,13 +14,13 @@ plt.rcParams["figure.figsize"] = (18, 7)
 pylab.rcParams["figure.figsize"] = (18, 7)
 
 def extract_as_list(filename):
-    """Opens file, appends each row (as dictionary) into list
+    """Opens file, appends each row (as dictionary) into list.
     
     Parameters: 
-        filename as string
+        filename as string.
    
     Returns: 
-        output: list of each row in csv file as a dictionary
+        output: list of each row in csv file as a dictionary.
     """
     
     output = list()
@@ -30,21 +30,21 @@ def extract_as_list(filename):
     return output
 
 def extract_as_dataframe(filename):
-    """Reads in the data of the csv file into DataFrame
+    """Reads in the data of the csv file into DataFrame.
     
     Parameters: 
-        filename: filename as string
+        filename: filename as string.
         
     Returns: 
-        data: DataFrame of csv file
+        data: DataFrame of csv file.
     """
     
     data = pd.read_csv(filename, low_memory=False)
     return data
     
 def extract_data_for_months_by_year(data_list):
-    """Extracts incidence per month for every year as a dictionary of dictionaries
-    for example, data points for the months of year 1980 would look something like this: 
+    """Extracts incidence per month for every year as a dictionary of dictionaries.
+    For example, data points for the months of year 1980 would look something like this: 
     
         {1980: {"January" : 18983, "February" : 23213, "March" : 31242 ... etc.}}
     
@@ -57,8 +57,8 @@ def extract_data_for_months_by_year(data_list):
     """
     
     output_dict = dict()
+    
     for row in data_list:
-        # print row
         if row["Year"] in output_dict.keys():
             year_dict = output_dict[row["Year"]]
             if row["Month"] in year_dict.keys():
@@ -67,19 +67,23 @@ def extract_data_for_months_by_year(data_list):
                 output_dict[row["Year"]][row["Month"]] = int(row["Incident"])
         else:
             output_dict[row["Year"]] = dict()
+     
+    assert (len(output_dict[row["Year"]]).keys() == 12), "Invalid number of months in data file."
+    
     return output_dict
                 
 def extract_data_by_categories(data_list, column_names, exclude_points):
-    """ Categorizes data points based on which column you want to look at
+    """ Categorizes data points based on which column you want to look at.
     
     Parameters: 
         data_list: list of dictionaries, each item in list is a row of the CSV file.
         column_names: list of column names as strings that you want to investigate.
-        exclude_points: list of values as strings that are invalid data points such as "Unknown"
+        exclude_points: list of values as strings that are invalid data points such as "Unknown".
     
     Returns: 
         output_dict: dictionary mapping each column to it's valid data points.
     """
+    
     output_dict = dict()
     # Reading in rows of file, excluding points that are invalid or "placeholder" points
     for row in data_list:
@@ -91,7 +95,7 @@ def extract_data_by_categories(data_list, column_names, exclude_points):
                     output_dict[name] = [row[name]]
 
     return output_dict
-
+         
 def find_mode_of_category(data_dict, column_name):
     """ Given a specific column name, finds the most common data point (mode) and gives
     its frequency.
@@ -101,7 +105,8 @@ def find_mode_of_category(data_dict, column_name):
         column_name: specific column name to find mode of. 
         
     Returns: 
-        max_freq_datum: tuple consisting of: (data point that is the mode, frequency of that data point)
+        max_freq_datum: tuple consisting of: (data point that is the mode, frequency of that 
+        data point).
     """
 
     data = data_dict[column_name]
@@ -144,7 +149,7 @@ def find_max_of_all(data_dict, column_names):
     return output
     
 def print_max_values(all_maxes, column_names):
-    """Formats list returned from find_max_of_all for printing
+    """Formats list returned from find_max_of_all for printing.
     
     Parameters:
         all_maxes: list returned from find_max_of_all, list of tuples as (mode datum, frequency). 
@@ -160,6 +165,71 @@ def print_max_values(all_maxes, column_names):
         percent = format(float(all_maxes[val][1]) * 100, '.2f')
         print "Most affected %s: %s, %s" % (category, max_data, percent) + "%"
 
+def extract_data_by_state(data_list, column_names, exclude_points, state_name):
+    """Gets most modes for chosen columns for chosen state.
+    
+    Parameters:
+        data_list: list of dictionaries, each item in list is a row of the CSV file.
+        column_names: list of column names as strings that you want to investigate.
+        exclude_points: list of values as strings that are invalid data points such as "Unknown".
+        state_name: state name as string that values are excluded to.
+    
+    Returns:
+        modes_for_state: list of tuples as returned from find_max_of_all.
+    """
+    
+    state_list = list()
+    
+    # Accumulate relevant rows of data_list for each state to be used to calculate mode
+    for row in data_list:
+        if row["State"] == state_name:
+            state_list.append(row)
+    
+    accum_data = extract_data_by_categories(state_list, column_names, exclude_points)
+    modes_for_state = find_max_of_all(accum_data, column_names)
+    
+    return modes_for_state
+
+def print_state_data(data_list, column_names, exclude_points, states):
+    """Formats calculated modes for printing.
+    
+    Parameters:
+        data_list: list of dictionaries, each item in list is a row of the CSV file.
+        column_names: list of column names as strings that you want to investigate.
+        exclude_points: list of values as strings that are invalid data points such as "Unknown"
+        states: list of states to calculate modes for
+    
+    Returns:
+        None, prints values for each state chosen.
+    """
+
+    for state in states: 
+        state_modes = extract_data_by_state(data_list, column_names, exclude_points, state)
+        print "For the state of %s:" %(state)
+        print_max_values(state_modes, column_names)
+        print
+
+def get_user_states(dict_states):
+    """Asks user what states they would like to look at, makes sure that it is a valid state.
+    
+    Parameters:
+        data_dict: dictionary of states mapping to their abbreviations
+    
+    Returns:
+        state_list: list of states user selected.
+    """
+    print "Please capitalize the first letter of the state name."
+    state1 = str(raw_input('What is the first state you would like to look at? '))
+    state2 = str(raw_input('What is the second state you would like to look at? '))
+    print
+    
+    state_list = [state1, state2]
+    
+    for state in state_list: 
+        assert (state in dict_states.keys()), "Please type a valid state name!"
+ 
+    return state_list
+    
 def spike_check_visual(year_data):
 
     for input_y in range(1980 , 2015):
@@ -245,7 +315,7 @@ def graph_affected_races(data_frame):
     plt.savefig("graphs\unsolved_hom_race_state.png")
     plt.clf()
 
-def graph_affected_race_for_state(data_frame):
+def graph_affected_race_for_state(data_frame, dict_states):
     """For each state, graphs victim race.
 
     Parameters:
@@ -254,19 +324,6 @@ def graph_affected_race_for_state(data_frame):
     Returns:
         None, saves graph.
     """
-
-    dict_states = {
-        "Alaska": "AK", "Alabama": "AL", "Arkansas": "AR", "Arizona": "AZ", "California": "CA", "Colorado": "CO",
-        "Connecticut": "CT", "District of Columbia": "DC", "Delaware": "DE", "Florida": "FL", "Georgia": "GA",
-        "Hawaii": "HI", "Iowa": "IA", "Idaho": "ID", "Illinois": "IL", "Indiana": "IN", "Kansas": "KS","Kentucky": "KY",
-        "Louisiana": "LA", "Massachusetts": "MA", "Maryland": "MD", "Maine": "ME", "Michigan": "MI",
-        "Minnesota": "MN", "Missouri": "MO", "Mississippi": "MS", "Montana": "MT", "North Carolina": "NC",
-        "North Dakota": "ND", "Nebraska": "NE", "New Hampshire": "NH", "New Jersey": "NJ", "New Mexico": "NM",
-        "Nevada": "NV", "New York": "NY", "Ohio": "OH", "Oklahoma": "OK", "Oregon": "OR", "Pennsylvania": "PA",
-        "Puerto Rico": "PR", "Rhode Island": "RI", "South Carolina": "SC", "South Dakota": "SD", "Tennessee": "TN",
-        "Texas": "TX", "Utah": "UT", "Virginia": "VA", "Vermont": "VT", "Washington": "WA", "Wisconsin": "WI",
-        "West Virginia": "WV", "Wyoming": "WY"
-    }
 
     abb_st = [val for val in dict_states.values()]
 
@@ -304,16 +361,39 @@ def main():
     filename = "crime_data.csv"
     column_names = ["Victim Sex", "Victim Age", "Victim Race", "Relationship"]
     exclude_points = ["Unknown", "0", "998"]
-
+    
+    dict_states = {
+        "Alaska": "AK", "Alabama": "AL", "Arkansas": "AR", "Arizona": "AZ", "California": "CA", "Colorado": "CO",
+        "Connecticut": "CT", "District of Columbia": "DC", "Delaware": "DE", "Florida": "FL", "Georgia": "GA",
+        "Hawaii": "HI", "Iowa": "IA", "Idaho": "ID", "Illinois": "IL", "Indiana": "IN", "Kansas": "KS","Kentucky": "KY",
+        "Louisiana": "LA", "Massachusetts": "MA", "Maryland": "MD", "Maine": "ME", "Michigan": "MI",
+        "Minnesota": "MN", "Missouri": "MO", "Mississippi": "MS", "Montana": "MT", "North Carolina": "NC",
+        "North Dakota": "ND", "Nebraska": "NE", "New Hampshire": "NH", "New Jersey": "NJ", "New Mexico": "NM",
+        "Nevada": "NV", "New York": "NY", "Ohio": "OH", "Oklahoma": "OK", "Oregon": "OR", "Pennsylvania": "PA",
+        "Puerto Rico": "PR", "Rhode Island": "RI", "South Carolina": "SC", "South Dakota": "SD", "Tennessee": "TN",
+        "Texas": "TX", "Utah": "UT", "Virginia": "VA", "Vermont": "VT", "Washington": "WA", "Wisconsin": "WI",
+        "West Virginia": "WV", "Wyoming": "WY"
+        }
+    
+    # Compare two state modes based on user input
+    answer = str(raw_input("Would you like to compare modes for two states? (yes/no) "))
+    if answer.lower() == "yes":
+        states = get_user_states(dict_states)
+        print_state_data(data_list, column_names, exclude_points, states)
+    else: 
+        print "Please wait for the remaining computations!"
+        
     # Extract data from CSV file 
     data_list = extract_as_list(filename)
     
     # Find all data points for victim sex, race, age, and relationship
     data_dict = extract_data_by_categories(data_list, column_names, exclude_points)
-    
+
     # Finds most common datum for victim sex, race, age, and relationship
     all_maxes = find_max_of_all(data_dict, column_names)
+    print "For all states:"
     print_max_values(all_maxes, column_names)
+    print
 
     # Find incidence rate per month for every year
     year_data = extract_data_for_months_by_year(data_list)
@@ -337,7 +417,7 @@ def main():
     graph_affected_races(data_frame)
 
     # Graph affected victim races based on frequency per state
-    graph_affected_race_for_state(data_frame)
-    
+    graph_affected_race_for_state(data_frame, dict_states)
+
 if __name__ == "__main__":
     main()
