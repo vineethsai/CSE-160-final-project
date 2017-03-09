@@ -218,6 +218,7 @@ def get_user_states(dict_states):
     Returns:
         state_list: list of states user selected.
     """
+    
     print "Please capitalize the first letter of the state name."
     state1 = str(raw_input('What is the first state you would like to look at? '))
     state2 = str(raw_input('What is the second state you would like to look at? '))
@@ -231,8 +232,9 @@ def get_user_states(dict_states):
     return state_list
     
 def spike_check_visual(year_data):
-    
+    year_set = set()
     diff_dict = dict()
+    
     for input_y in range(1980 , 2015):
         input_year = str(input_y)
         month_data = year_data[input_year].items()
@@ -251,6 +253,7 @@ def spike_check_visual(year_data):
         # Assigning each difference value with what to print if it becomes one of the three largest spikes.
         for i in range(0 , 11):
             if (y_val[i] * 1.27) <= (y_val[i + 1]):
+                year_set.add(input_year)
                 diff = y_val[i + 1] - y_val[i]
                 diff_dict[diff] = "%s to %s %s" %(x_val[i], x_val[i + 1], input_year)
 
@@ -265,10 +268,10 @@ def spike_check_visual(year_data):
         pylab.clf()
         
     top_three_diff = sorted(diff_dict.keys())[0:3]
-    print "Three largest spikes from 1980 to 2014:"
+    print "Three largest spikes in total monthly incidents from 1980 to 2014:"
     for diff in top_three_diff:
         print diff_dict[diff]  
-
+    
 def graph_affected_ages(age_clean_data):
     """Graphs plot showing number of incidents for different victim ages.
 
@@ -382,7 +385,6 @@ def main():
         "West Virginia": "WV", "Wyoming": "WY"
         }
     
-            
     # Extract data from CSV file 
     data_list = extract_as_list(filename)
     
@@ -398,7 +400,7 @@ def main():
         print "Please wait for the remaining computations!"
         print
 
-    # Finds most common datum for victim sex, race, age, and relationship
+    # Find most common datum for victim sex, race, age, and relationship
     all_maxes = find_max_of_all(data_dict, column_names)
     print "For all states:"
     print_max_values(all_maxes, column_names)
