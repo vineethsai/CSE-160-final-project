@@ -1,4 +1,3 @@
-# Name: Nanda Sundaresan
 # UW NetID (Nanda Sundaresan): nandas
 # UW NetID (Vineeth Sai Narajala): vineeth7
 # CSE 160
@@ -164,12 +163,10 @@ def spike_check_visual(year_data):
         x = range(12)
         pylab.xticks(x, x_val)
         pylab.plot(x, y_val, "g")
-        pylab.title("Graph showing number of incidents per month for the year "+input_year)
+        pylab.title("Number of Incidents per Month for" + input_year)
         pylab.ylabel("Number of Incidents")
         pylab.xlabel("Months")
         pylab.savefig("yearly\incidents_"+ str(input_year)+".png")
-
-
 
 def graph_affected_ages(age_clean_data):
     """
@@ -180,7 +177,7 @@ def graph_affected_ages(age_clean_data):
     """
 
     age_clean_data["Victim Age"].value_counts().sort_index(ascending=True).plot(kind="bar", color="purple")
-    plt.title('Graph showing number of incidents for different Victim Ages')
+    plt.title("Number of Incidents for Victim Ages")
     plt.savefig("graphs\\victim_age.png")
     plt.clf()
 
@@ -193,7 +190,7 @@ def graph_affected_sexes(data_frame):
     """
 
     data_frame['Victim Sex'].value_counts().plot(kind='bar')
-    plt.title("Bar graph of victim sexes to number of incidents")
+    plt.title("Number of Incidents for Victim Sexes")
     plt.savefig("graphs\\number_hom_sex.png")
     plt.clf()
 
@@ -208,7 +205,7 @@ def graph_affected_races(data_frame):
     "colorblind")
     ax1.legend(loc='upper right')
     # data_frame['Victim Race'].value_counts().plot(kind='bar')
-    plt.title("Count of Homicides for different race ")
+    plt.title("Number of Incidents for Victim Races")
     plt.savefig("graphs\unsolved_hom_race_state.png")
     plt.clf()
 
