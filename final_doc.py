@@ -59,7 +59,7 @@ def extract_data_for_months_by_year(data_list):
     output_dict = dict()
     for row in data_list:
         # print row
-        if row['Year'] in output_dict.keys():
+        if row["Year"] in output_dict.keys():
             year_dict = output_dict[row["Year"]]
             if row["Month"] in year_dict.keys():
                 output_dict[row["Year"]][row["Month"]] += int(row["Incident"])
@@ -114,17 +114,16 @@ def find_mode_of_category(data_dict, column_name):
         else:
             number_dict[datum] = 1
 
-    # Converting counts into percentage of total data points
+    # Converting counts into percentage of total data points (frequency)
     num_of_points = sum(number_dict.values())
     for val in number_dict:
         number_dict[val] = float(number_dict[val]) / num_of_points
 
     # Sorting data from max frequency to min frequency, first datum is max
-    max_to_min = sorted(number_dict.items(), key=itemgetter(1), reverse=True)
+    max_to_min = sorted(number_dict.items(), key = itemgetter(1), reverse = True)
     max_freq_datum = max_to_min[0]
 
     return max_freq_datum
-
 
 def find_max_of_all(data_dict, column_names):
     """ Given multiple column names, finds the modes for each column and their frequencies.
@@ -162,29 +161,28 @@ def print_max_values(all_maxes, column_names):
         print "Most affected %s: %s, %s" % (category, max_data, percent) + "%"
 
 def spike_check_visual(year_data):
-    """
-    :param year_data:
-    :return:
-    """
-    for input_y in range(1980,2015):
+
+    for input_y in range(1980 , 2015):
         input_year = str(input_y)
-        item = year_data[input_year].items()
+        month_data = year_data[input_year].items()
         x_val = [None]*12
         y_val = [None]*12
+        spike_years = list()
 
-        month = ["January", 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
-                 "October", 'November', "December"]
-        for items in item:
+        # Order the months in chronological order so when graphing, it does not display randomly
+        month = ["January", ="February=", ="March=", ="April=", ="May=", ="June=", ="July=", ="August=", ="September=",
+                 "October", ="November=", "December"]
+        for items in month_data:
             for i in range(12):
                 if items[0] == month[i]:
                     x_val[i] = items[0]
                     y_val[i] = items[1]
 
-        for i in range(0,11):
-            if (y_val[i]*1.27) <= (y_val[i+1]):
-                print "There is a spike from ", x_val[i],"to", x_val[1+i], input_year
+        for i in range(0 , 11):
+            if (y_val[i] * 1.27) <= (y_val[i + 1]):
+                spike_years.append(input_year)
+                print "There is a spike from ", x_val[i], "to", x_val[i + 1], input_year
 
-        pylab.clf()
         pylab.figure(1)
         x = range(12)
         pylab.xticks(x, x_val)
@@ -193,68 +191,81 @@ def spike_check_visual(year_data):
         pylab.ylabel("Number of Incidents")
         pylab.xlabel("Months")
         pylab.savefig("yearly\incidents_"+ str(input_year)+".png")
+        pylab.clf()
 
 def graph_affected_ages(age_clean_data):
-    """
-    Graph showing number of incidents for different Victim Ages
-    :param age_clean_data: cleaned data frame where age != 998 or 99
-    :return: None
-    :Side effects: Saves graph of affected ages
+    """Graphs plot showing number of incidents for different victim ages.
+
+    Parameters:
+        age_clean_data: cleaned DataFrame where age is not 998 or 99 (void values)
+
+    Returns:
+        None, saves graph.
     """
 
-    age_clean_data["Victim Age"].value_counts().sort_index(ascending=True).plot(kind="bar", color="purple")
-    plt.title("Number of Incidents for Victim Ages")
+    age_clean_data["Victim Age"].value_counts().sort_index(ascending = True).plot(kind = "bar", color = "purple")
+    plt.title("Number of Incidents for all Victim Ages")
+    plt.xlabel("Ages")
+    plt.ylabel("Number of Incidents")
     plt.savefig("graphs\\victim_age.png")
     plt.clf()
 
 def graph_affected_sexes(data_frame):
-    """
-    graphs the affected sexes
-    :param data_frame: data frame to be graphed
-    :return: None
-    :side effects: Saves graph of affected sexes
+    """Graphs plot showing number of incidents for different victim sexes.
+
+    Parameters:
+        data_frame: DataFrame of csv file.
+
+    Returns:
+        None, saves graph.
     """
 
-    data_frame['Victim Sex'].value_counts().plot(kind='bar')
+    data_frame["Victim Sex"].value_counts().plot(kind = 'bar')
     plt.title("Number of Incidents for Victim Sexes")
+    plt.ylabel("Number of Incidents")
     plt.savefig("graphs\\number_hom_sex.png")
     plt.clf()
 
 def graph_affected_races(data_frame):
+    """Graphs plot showing number of incidents for different victim races.
+
+    Parameters:
+        data_frame: DataFrame of csv file.
+
+    Returns:
+        None, saves graph.
     """
-    graphs the effected races
-    :param data_frame: data frame to be graphed
-    :return: None
-    :side effects: Saves graph of affected races
-    """
-    ax1 = sns.countplot(x="Victim Race", hue="Victim Race", data=data_frame, palette=
+
+    ax1 = sns.countplot(x = "Victim Race", hue = "Victim Race", data = data_frame, palette =
     "colorblind")
     ax1.legend(loc='upper right')
-    # data_frame['Victim Race'].value_counts().plot(kind='bar')
     plt.title("Number of Incidents for Victim Races")
+    plt.xlabel("Victim Races")
+    plt.ylabel("Number of Incidents")
     plt.savefig("graphs\unsolved_hom_race_state.png")
     plt.clf()
 
-
 def graph_affected_race_for_state(data_frame):
+    """For each state, graphs victim race.
+
+    Parameters:
+        data_frame: DataFrame of csv file.
+
+    Returns:
+        None, saves graph.
     """
-    input month and year and it'll show you a bar graph of
-    affected races in that month, we can see if there is an increase
-    in crimes against a specific race in the month with the spike
-    :param data_frame: data frame to be graphed
-    :return:None
-    """
+
     dict_states = {
-        'Alaska': 'AK', 'Alabama': 'AL', 'Arkansas': 'AR', 'Arizona': 'AZ', 'California': 'CA', 'Colorado': 'CO',
-        'Connecticut': 'CT', 'District of Columbia': 'DC', 'Delaware': 'DE', 'Florida': 'FL', 'Georgia': 'GA',
-        'Hawaii': 'HI', 'Iowa': 'IA', 'Idaho': 'ID', 'Illinois': 'IL', 'Indiana': 'IN', 'Kansas': 'KS','Kentucky': 'KY',
-        'Louisiana': 'LA', 'Massachusetts': 'MA', 'Maryland': 'MD', 'Maine': 'ME', 'Michigan': 'MI',
-        'Minnesota': 'MN', 'Missouri': 'MO', 'Mississippi': 'MS', 'Montana': 'MT', 'North Carolina': 'NC',
-        'North Dakota': 'ND', 'Nebraska': 'NE', 'New Hampshire': 'NH', 'New Jersey': 'NJ', 'New Mexico': 'NM',
-        'Nevada': 'NV', 'New York': 'NY', 'Ohio': 'OH', 'Oklahoma': 'OK', 'Oregon': 'OR', 'Pennsylvania': 'PA',
-        'Puerto Rico': 'PR', 'Rhode Island': 'RI', 'South Carolina': 'SC', 'South Dakota': 'SD', 'Tennessee': 'TN',
-        'Texas': 'TX', 'Utah': 'UT', 'Virginia': 'VA', 'Vermont': 'VT', 'Washington': 'WA', 'Wisconsin': 'WI',
-        'West Virginia': 'WV', 'Wyoming': 'WY'
+        "Alaska": "AK", "Alabama": "AL", "Arkansas": "AR", "Arizona": "AZ", "California": "CA", "Colorado": "CO",
+        "Connecticut": "CT", "District of Columbia": "DC", "Delaware": "DE", "Florida": "FL", "Georgia": "GA",
+        "Hawaii": "HI", "Iowa": "IA", "Idaho": "ID", "Illinois": "IL", "Indiana": "IN", "Kansas": "KS","Kentucky": "KY",
+        "Louisiana": "LA", "Massachusetts": "MA", "Maryland": "MD", "Maine": "ME", "Michigan": "MI",
+        "Minnesota": "MN", "Missouri": "MO", "Mississippi": "MS", "Montana": "MT", "North Carolina": "NC",
+        "North Dakota": "ND", "Nebraska": "NE", "New Hampshire": "NH", "New Jersey": "NJ", "New Mexico": "NM",
+        "Nevada": "NV", "New York": "NY", "Ohio": "OH", "Oklahoma": "OK", "Oregon": "OR", "Pennsylvania": "PA",
+        "Puerto Rico": "PR", "Rhode Island": "RI", "South Carolina": "SC", "South Dakota": "SD", "Tennessee": "TN",
+        "Texas": "TX", "Utah": "UT", "Virginia": "VA", "Vermont": "VT", "Washington": "WA", "Wisconsin": "WI",
+        "West Virginia": "WV", "Wyoming": "WY"
     }
 
     abb_st = [val for val in dict_states.values()]
@@ -263,20 +274,27 @@ def graph_affected_race_for_state(data_frame):
     "colorblind")
     ax6.set_xticklabels(abb_st)
     ax6.legend(loc='upper right')
-    plt.title("Homicides for different race in various states")
+    plt.title("Frequency of Victim Race Based on State")
+    plt.ylabel("Number of Incidents")
     plt.savefig("graphs\hom_race_state.png")
     plt.clf()
 
 def graph_weapons_handgun_over_time(data_frame):
-    """
-    Graph of use of handguns over time
-    :return: None
-    :side effect: save a graph showing use of handguns over time
+    """Graphs number of cases with weapon documented as "handgun". Graphs handgun
+    use over time.
+
+    Parameters:
+        data_frame: DataFrame of csv file.
+
+    Returns:
+        None, saves graph.
     """
     ax2 = sns.countplot(x="Year", hue="Weapon", data=data_frame[data_frame["Weapon"] == "Handgun"], 
                         palette="colorblind")
     ax2.legend(loc='upper right')
-    plt.title("graph of use of handguns over time")
+    plt.title("Use of Handguns over Time")
+    plt.xlabel("Years")
+    plt.ylabel("Number of Homicides using Handguns")
     plt.savefig("graphs\handgun_time.png")
     plt.clf()
 
@@ -285,7 +303,7 @@ def main():
 
     filename = "crime_data.csv"
     column_names = ["Victim Sex", "Victim Age", "Victim Race", "Relationship"]
-    exclude_points = ['Unknown', '0', '998']
+    exclude_points = ["Unknown", "0", "998"]
 
     # Extract data from CSV file 
     data_list = extract_as_list(filename)
@@ -305,8 +323,8 @@ def main():
     data_frame = extract_as_dataframe(filename)
 
     # Graph affected victim ages
-    age_clean_data = data_frame[data_frame['Victim Age'] != 998]
-    age_clean_data = age_clean_data[age_clean_data['Victim Age'] != 99]
+    age_clean_data = data_frame[data_frame["Victim Age"] != 998]
+    age_clean_data = age_clean_data[age_clean_data["Victim Age"] != 99]
     graph_affected_ages(age_clean_data)
 
     # Graph use of handguns over time
