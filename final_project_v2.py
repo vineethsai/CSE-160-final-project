@@ -141,43 +141,14 @@ def spike_check_visual(year_data):
         x_val = [None]*12
         y_val = [None]*12
 
+        month = ["January", 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',"October", 'November', "December"]
         for items in item:
-            if items[0] == "January":
-                x_val[0]= items[0]
-                y_val[0]= items[1]
-            elif items[0] == 'February':
-                x_val[1] = items[0]
-                y_val[1] = items[1]
-            elif items[0] == 'March':
-                x_val[2] = items[0]
-                y_val[2] = items[1]
-            elif items[0] == 'April':
-                x_val[3] = items[0]
-                y_val[3] = items[1]
-            elif items[0] == 'May':
-                x_val[4] = items[0]
-                y_val[4] = items[1]
-            elif items[0] == 'June':
-                x_val[5] = items[0]
-                y_val[5] = items[1]
-            elif items[0] == 'July':
-                x_val[6] = items[0]
-                y_val[6] = items[1]
-            elif items[0] == 'August':
-                x_val[7] = items[0]
-                y_val[7] = items[1]
-            elif items[0] == 'September':
-                x_val[8] = items[0]
-                y_val[8] = items[1]
-            elif items[0] == 'October':
-                x_val[9] = items[0]
-                y_val[9] = items[1]
-            elif items[0] == 'November':
-                x_val[10] = items[0]
-                y_val[10] = items[1]
-            else:
-                x_val[11] = items[0]
-                y_val[11] = items[1]
+            for i in range(12):
+                if items[0] == month[i]:
+                    x_val[i] = items[0]
+                    y_val[i] = items[1]
+
+
 
         for i in range(0,11):
             if (y_val[i]*1.27) <= (y_val[i+1]):
