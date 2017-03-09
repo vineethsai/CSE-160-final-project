@@ -279,7 +279,8 @@ def graph_affected_ages(age_clean_data):
         None, saves graph.
     """
 
-    age_clean_data["Victim Age"].value_counts().sort_index(ascending = True).plot(kind = "bar", color = "purple")
+    age_clean_data["Victim Age"].value_counts().sort_index(ascending = True).plot(kind = "bar", 
+                                color = "purple")
     plt.title("Number of Incidents for all Victim Ages")
     plt.xlabel("Ages")
     plt.ylabel("Number of Incidents")
@@ -313,7 +314,7 @@ def graph_affected_races(data_frame):
     """
 
     ax1 = sns.countplot(x = "Victim Race", hue = "Victim Race", data = data_frame, palette =
-    "colorblind")
+                        "colorblind")
     ax1.legend(loc='upper right')
     plt.title("Number of Incidents for Victim Races")
     plt.xlabel("Victim Races")
@@ -381,6 +382,13 @@ def main():
         "West Virginia": "WV", "Wyoming": "WY"
         }
     
+            
+    # Extract data from CSV file 
+    data_list = extract_as_list(filename)
+    
+    # Find all data points for victim sex, race, age, and relationship
+    data_dict = extract_data_by_categories(data_list, column_names, exclude_points)
+    
     # Compare two state modes based on user input
     answer = str(raw_input("Would you like to compare modes for two states? (yes/no) "))
     if answer.lower() == "yes":
@@ -389,19 +397,13 @@ def main():
     else: 
         print "Please wait for the remaining computations!"
         print
-        
-    # Extract data from CSV file 
-    data_list = extract_as_list(filename)
-    
-    # Find all data points for victim sex, race, age, and relationship
-    data_dict = extract_data_by_categories(data_list, column_names, exclude_points)
 
     # Finds most common datum for victim sex, race, age, and relationship
     all_maxes = find_max_of_all(data_dict, column_names)
     print "For all states:"
     print_max_values(all_maxes, column_names)
     print
-
+    
     # Find incidence rate per month for every year
     year_data = extract_data_for_months_by_year(data_list)
     spike_check_visual(year_data)
@@ -428,3 +430,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
