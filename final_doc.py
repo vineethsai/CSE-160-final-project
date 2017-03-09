@@ -68,7 +68,7 @@ def extract_data_for_months_by_year(data_list):
         else:
             output_dict[row["Year"]] = dict()
      
-    assert (len(output_dict[row["Year"]]).keys() == 12), "Invalid number of months in data file."
+    assert (len(output_dict[row["Year"]].keys()) == 12), "Invalid number of months in data file."
     
     return output_dict
                 
@@ -231,13 +231,13 @@ def get_user_states(dict_states):
     return state_list
     
 def spike_check_visual(year_data):
-
+    
+    diff_dict = dict()
     for input_y in range(1980 , 2015):
         input_year = str(input_y)
         month_data = year_data[input_year].items()
         x_val = [None]*12
         y_val = [None]*12
-        spike_years = list()
 
         # Order the months in chronological order so when graphing, it does not display randomly
         month = ["January", "February", "March", "April", "May", "June", "July", "August", "September",
@@ -247,11 +247,12 @@ def spike_check_visual(year_data):
                 if items[0] == month[i]:
                     x_val[i] = items[0]
                     y_val[i] = items[1]
-
+        
+        # Assigning each difference value with what to print if it becomes one of the three largest spikes.
         for i in range(0 , 11):
             if (y_val[i] * 1.27) <= (y_val[i + 1]):
-                spike_years.append(input_year)
-                print "There is a spike from ", x_val[i], "to", x_val[i + 1], input_year
+                diff = y_val[i + 1] - y_val[i]
+                diff_dict[diff] = "%s to %s %s" %(x_val[i], x_val[i + 1], input_year)
 
         pylab.figure(1)
         x = range(12)
@@ -262,6 +263,11 @@ def spike_check_visual(year_data):
         pylab.xlabel("Months")
         pylab.savefig("yearly\incidents_"+ str(input_year)+".png")
         pylab.clf()
+        
+    top_three_diff = sorted(diff_dict.keys())[0:3]
+    print "Three largest spikes from 1980 to 2014:"
+    for diff in top_three_diff:
+        print diff_dict[diff]  
 
 def graph_affected_ages(age_clean_data):
     """Graphs plot showing number of incidents for different victim ages.
@@ -382,6 +388,7 @@ def main():
         print_state_data(data_list, column_names, exclude_points, states)
     else: 
         print "Please wait for the remaining computations!"
+        print
         
     # Extract data from CSV file 
     data_list = extract_as_list(filename)
