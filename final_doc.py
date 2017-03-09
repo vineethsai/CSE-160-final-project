@@ -14,7 +14,15 @@ plt.rcParams["figure.figsize"] = (18, 7)
 pylab.rcParams["figure.figsize"] = (18, 7)
 
 def extract_as_list(filename):
-    """ Opens file, appends each row (as dictionary) into list"""
+    """Opens file, appends each row (as dictionary) into list
+    
+    Parameters: 
+        filename as string
+   
+    Returns: 
+        output: list of each row in csv file as a dictionary
+    """
+    
     output = list()
     csv_file = open(filename)
     for row in csv.DictReader(csv_file):
@@ -22,15 +30,32 @@ def extract_as_list(filename):
     return output
 
 def extract_as_dataframe(filename):
+    """Reads in the data of the csv file into DataFrame
+    
+    Parameters: 
+        filename: filename as string
+        
+    Returns: 
+        data: DataFrame of csv file
     """
-    reads in the data
-    :param filename: name of the csv file
-    :return: reads the data as a data frame
-    """
+    
     data = pd.read_csv(filename, low_memory=False)
     return data
+    
 def extract_data_for_months_by_year(data_list):
-    """Extracts incidence per month for every year, dictionary of dictionaries"""
+    """Extracts incidence per month for every year as a dictionary of dictionaries
+    for example, data points for the months of year 1980 would look something like this: 
+    
+        {1980: {"January" : 18983, "February" : 23213, "March" : 31242 ... etc.}}
+    
+    Parameters: 
+        data_list: list of dictionaries, each item in list is a row of the CSV file.
+        
+    Returns: 
+        output_dict: dictionary mapping year to incidences per month of that year.
+    
+    """
+    
     output_dict = dict()
     for row in data_list:
         # print row
@@ -45,10 +70,18 @@ def extract_data_for_months_by_year(data_list):
     return output_dict
                 
 def extract_data_by_categories(data_list, column_names, exclude_points):
-    """ Categorizes data points based on which column data you want to look at"""
+    """ Categorizes data points based on which column you want to look at
+    
+    Parameters: 
+        data_list: list of dictionaries, each item in list is a row of the CSV file.
+        column_names: list of column names as strings that you want to investigate.
+        exclude_points: list of values as strings that are invalid data points such as "Unknown"
+    
+    Returns: 
+        output_dict: dictionary mapping each column to it's valid data points.
+    """
     output_dict = dict()
-    # Reading each row of the csv file, excluding points that are invalid or
-    # "placeholder" points
+    # Reading in rows of file, excluding points that are invalid or "placeholder" points
     for row in data_list:
         for name in column_names:
             if row[name] not in exclude_points:
@@ -59,10 +92,17 @@ def extract_data_by_categories(data_list, column_names, exclude_points):
 
     return output_dict
 
-
-
 def find_mode_of_category(data_dict, column_name):
-    """ Finds the most common value in that category """
+    """ Given a specific column name, finds the most common data point (mode) and gives
+    its frequency.
+    
+    Parameters: 
+        data_dict: dictionary of selected column names as keys with their data points as values. 
+        column_name: specific column name to find mode of. 
+        
+    Returns: 
+        max_freq_datum: tuple consisting of: (data point that is the mode, frequency of that data point)
+    """
 
     data = data_dict[column_name]
 
@@ -87,7 +127,15 @@ def find_mode_of_category(data_dict, column_name):
 
 
 def find_max_of_all(data_dict, column_names):
-    """ Formats modes into list """
+    """ Given multiple column names, finds the modes for each column and their frequencies.
+    
+    Parameters: 
+        data_dict: dictionary of selected column names as keys with their data points as values. 
+        column_names: list of column names as strings that you want to investigate.
+        
+    Returns: 
+        output: list of tuples, each item in list as a return value from find_mode_of_category.
+    """
 
     output = list()
     for name in column_names:
@@ -97,7 +145,15 @@ def find_max_of_all(data_dict, column_names):
     return output
     
 def print_max_values(all_maxes, column_names):
-    """Formats find_max_of_all for printing"""
+    """Formats list returned from find_max_of_all for printing
+    
+    Parameters:
+        all_maxes: list returned from find_max_of_all, list of tuples as (mode datum, frequency). 
+        column_names: list of column names as strings that you want to investigate.
+    
+    Returns:
+        None, prints results from finding mode of the data. 
+    """
     
     for val in range(len(column_names)):
         category = column_names[val]
@@ -116,43 +172,13 @@ def spike_check_visual(year_data):
         x_val = [None]*12
         y_val = [None]*12
 
+        month = ["January", 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
+                 "October", 'November', "December"]
         for items in item:
-            if items[0] == "January":
-                x_val[0]= items[0]
-                y_val[0]= items[1]
-            elif items[0] == 'February':
-                x_val[1] = items[0]
-                y_val[1] = items[1]
-            elif items[0] == 'March':
-                x_val[2] = items[0]
-                y_val[2] = items[1]
-            elif items[0] == 'April':
-                x_val[3] = items[0]
-                y_val[3] = items[1]
-            elif items[0] == 'May':
-                x_val[4] = items[0]
-                y_val[4] = items[1]
-            elif items[0] == 'June':
-                x_val[5] = items[0]
-                y_val[5] = items[1]
-            elif items[0] == 'July':
-                x_val[6] = items[0]
-                y_val[6] = items[1]
-            elif items[0] == 'August':
-                x_val[7] = items[0]
-                y_val[7] = items[1]
-            elif items[0] == 'September':
-                x_val[8] = items[0]
-                y_val[8] = items[1]
-            elif items[0] == 'October':
-                x_val[9] = items[0]
-                y_val[9] = items[1]
-            elif items[0] == 'November':
-                x_val[10] = items[0]
-                y_val[10] = items[1]
-            else:
-                x_val[11] = items[0]
-                y_val[11] = items[1]
+            for i in range(12):
+                if items[0] == month[i]:
+                    x_val[i] = items[0]
+                    y_val[i] = items[1]
 
         for i in range(0,11):
             if (y_val[i]*1.27) <= (y_val[i+1]):
@@ -221,8 +247,7 @@ def graph_affected_race_for_state(data_frame):
     dict_states = {
         'Alaska': 'AK', 'Alabama': 'AL', 'Arkansas': 'AR', 'Arizona': 'AZ', 'California': 'CA', 'Colorado': 'CO',
         'Connecticut': 'CT', 'District of Columbia': 'DC', 'Delaware': 'DE', 'Florida': 'FL', 'Georgia': 'GA',
-        'Hawaii': 'HI', 'Iowa': 'IA', 'Idaho': 'ID', 'Illinois': 'IL', 'Indiana': 'IN', 'Kansas': 'KS',
-        'Kentucky': 'KY',
+        'Hawaii': 'HI', 'Iowa': 'IA', 'Idaho': 'ID', 'Illinois': 'IL', 'Indiana': 'IN', 'Kansas': 'KS','Kentucky': 'KY',
         'Louisiana': 'LA', 'Massachusetts': 'MA', 'Maryland': 'MD', 'Maine': 'ME', 'Michigan': 'MI',
         'Minnesota': 'MN', 'Missouri': 'MO', 'Mississippi': 'MS', 'Montana': 'MT', 'North Carolina': 'NC',
         'North Dakota': 'ND', 'Nebraska': 'NE', 'New Hampshire': 'NH', 'New Jersey': 'NJ', 'New Mexico': 'NM',
@@ -262,19 +287,21 @@ def main():
     column_names = ["Victim Sex", "Victim Age", "Victim Race", "Relationship"]
     exclude_points = ['Unknown', '0', '998']
 
-    # Extracts CSV file into list
+    # Extract data from CSV file 
     data_list = extract_as_list(filename)
-    # Combines all values for given columns
-    data_dict = extract_data_by_categories(data_list, column_names, exclude_points)
-    # Finds modes of each column selected
-    all_maxes = find_max_of_all(data_dict, column_names)
     
+    # Find all data points for victim sex, race, age, and relationship
+    data_dict = extract_data_by_categories(data_list, column_names, exclude_points)
+    
+    # Finds most common datum for victim sex, race, age, and relationship
+    all_maxes = find_max_of_all(data_dict, column_names)
     print_max_values(all_maxes, column_names)
 
     # Find incidence rate per month for every year
     year_data = extract_data_for_months_by_year(data_list)
     spike_check_visual(year_data)
 
+    # Extract data from CSV file as DataFrame
     data_frame = extract_as_dataframe(filename)
 
     # Graph affected victim ages
@@ -282,16 +309,17 @@ def main():
     age_clean_data = age_clean_data[age_clean_data['Victim Age'] != 99]
     graph_affected_ages(age_clean_data)
 
-    # graphs weapon over time
+    # Graph use of handguns over time
     graph_weapons_handgun_over_time(data_frame)
 
-    # graphs affected sex
+    # Graph affected victim sex based on frequency
     graph_affected_sexes(data_frame)
 
-    # graphs affected races
+    # Graph affected victim races based on frequency
     graph_affected_races(data_frame)
 
+    # Graph affected victim races based on frequency per state
     graph_affected_race_for_state(data_frame)
-
+    
 if __name__ == "__main__":
     main()
