@@ -249,8 +249,8 @@ def spike_check_visual(year_data):
 
         # Assigning each difference value with what to print if it becomes one of the three largest spikes.
         for i in range(0, 11):
-            # A spike is defined as an increase in 125% over the time period of one month.
-            if (y_val[i] * 1.25) <= (y_val[i + 1]):
+            # A spike is defined as an increase in 150% or more over the time period of one month.
+            if (y_val[i] * 1.5) <= (y_val[i + 1]):
                 year_set.add(input_year)
                 diff = y_val[i + 1] - y_val[i]
                 diff_dict[diff] = "%s to %s %s" % (x_val[i], x_val[i + 1], input_year)
@@ -280,7 +280,7 @@ def graph_spike_year(x_val, y_val, input_year):
     x = range(12)
     pylab.xticks(x, x_val)
     pylab.plot(x, y_val, "g")
-    pylab.title("Number of Incidents per Month for" + input_year)
+    pylab.title("Number of Incidents per Month for " + input_year)
     pylab.ylabel("Number of Incidents")
     pylab.xlabel("Months")
     pylab.savefig("yearly\incidents_" + str(input_year) + ".png")
@@ -529,7 +529,7 @@ def main():
     graph_affected_race_for_state(data_frame, dict_states)
     print "Done\n"
 
-    print "Check the folder 'yearly' and 'graphs' for the plots\n"
+    print "\nCheck the folder 'yearly' and 'graphs' for the plots\n"
     print "Terminating...\n"
     print "Program complete."
     
