@@ -529,7 +529,7 @@ def main():
     graph_affected_race_for_state(data_frame, dict_states)
     print "Done\n"
 
-    print "\nCheck the folder 'yearly' and 'graphs' for the plots\n"
+    print "Check the folder 'yearly' and 'graphs' for the plots\n"
     print "Terminating...\n"
     print "Program complete."
     
