@@ -392,10 +392,23 @@ def find_incidents_for_states(data_list, dict_states):
             final_dict[dict_states[row["State"]]] += int(row["Incident"])
         else:
             final_dict[dict_states[row["State"]]] = int(row["Incident"])
-
+    
     return final_dict
     
-    # assert (len(final_dict.keys()) == (dict_states.keys())
+    
+def print_high_and_low_incidence(final_dict): 
+    """Prints state with highest total incidents and lowest. 
+    Parameters: 
+        final_dict: dictionary mapping each state to it's total incident count.
+    Returns:
+        None, prints. 
+    """
+    
+    greatest_to_least = sorted(final_dict.items(), key = itemgetter(1), reverse = True)
+    print "States with highest and lowest total incidents:"
+    print "Highest: %s, Total Incidents: %d" %(greatest_to_least[0][0], greatest_to_least[0][1])
+    print "Lowest: %s, Total Incidents: %d" %(greatest_to_least[-1][0], greatest_to_least[-1][1])
+    print
 
 def graph_crime_state(state_dict):
     """Graphs total incidents for each state.
@@ -473,13 +486,21 @@ def main():
     
     print "Please wait, the program is graphing the results\n"
 
-    print "Plotting Years with spikes...\n"
+    print "Plotting years with spikes...\n"
     # Find incidence rate per month for every year
     year_data = extract_data_for_months_by_year(data_list)
     spike_check_visual(year_data)
 
     # Extract data from CSV file as DataFrame
     data_frame = extract_as_dataframe(filename)
+    
+    print "Plotting total incidents for all states..."
+    # Graph all incidents for all states
+    incidents_dict = find_incidents_for_states(data_list, dict_states)
+    graph_crime_state(incidents_dict)
+    print "Done\n"
+    
+    print_high_and_low_incidence(incidents_dict)
 
     print "Plotting affected victim ages..."
     # Graph affected victim ages
@@ -507,14 +528,8 @@ def main():
     # Graph affected victim races based on frequency per state
     graph_affected_race_for_state(data_frame, dict_states)
     print "Done\n"
-    
-    print "Plotting total incidents for all states..."
-    # Graph all incidents for all states
-    incidents_dict = find_incidents_for_states(data_list, dict_states)
-    graph_crime_state(incidents_dict)
-    print "Done\n"
 
-    print "Check the folder 'yearly' and 'graphs' for the plots\n"
+    print "\nCheck the folder 'yearly' and 'graphs' for the plots\n"
     print "Terminating...\n"
     print "Program complete."
     
