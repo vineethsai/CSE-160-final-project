@@ -10,8 +10,8 @@ import pylab
 import pandas as pd
 import seaborn as sns
 
-plt.rcParams["figure.figsize"] = (18, 7)
-pylab.rcParams["figure.figsize"] = (18, 7)
+plt.rcParams["figure.figsize"] = (18, 8)
+pylab.rcParams["figure.figsize"] = (18, 8)
 
 
 def extract_as_list(filename):
@@ -119,7 +119,7 @@ def find_mode_of_category(data_dict, column_name):
         number_dict[val] = float(number_dict[val]) / num_of_points
 
     # Sorting data from max frequency to min frequency, first datum is max
-    max_to_min = sorted(number_dict.items(), key=itemgetter(1), reverse=True)
+    max_to_min = sorted(number_dict.items(), key = itemgetter(1), reverse = True)
     max_freq_datum = max_to_min[0]
 
     return max_freq_datum
@@ -223,10 +223,9 @@ def get_user_states(dict_states):
 
 def spike_check_visual(year_data):
     """Orders months in chronological order and checks for spikes in total incidents per month.
-
     Parameters:
-        year_data: dictionary of dictionaries, each year mapping to dictionary of months mapping to total incidents.
-
+        year_data: dictionary of dictionaries, each year mapping to dictionary of months mapping 
+        to total incidents.
     Returns:
         None, prints statements.
     """
@@ -269,12 +268,10 @@ def spike_check_visual(year_data):
 
 def graph_spike_year(x_val, y_val, input_year):
     """Graphs each year which has a spike.
-
     Parameters:
         x_val: list of months.
         y_val: list of total incidents for cooresponding month.
         input_year: string that is the year which we are to graph.
-
     Returns:
         None, saves graph.
     """
@@ -292,17 +289,15 @@ def graph_spike_year(x_val, y_val, input_year):
 
 def graph_affected_ages(age_clean_data):
     """Graphs plot showing number of incidents for different victim ages.
-
     Parameters:
         age_clean_data: cleaned DataFrame where age is not 998 or 99 (void values)
-
     Returns:
         None, saves graph.
     """
 
-    age_clean_data["Victim Age"].value_counts().sort_index(ascending=True).plot(kind="bar",
-                                                                                color="purple")
-    plt.title("Number of Incidents for all Victim Ages")
+    age_clean_data["Victim Age"].value_counts().sort_index(ascending=True).plot(kind = "bar",
+                                                                                color = "purple")
+    plt.title("Number of Incidents for Victim Ages")
     plt.xlabel("Ages")
     plt.ylabel("Number of Incidents")
     plt.savefig("graphs\\victim_age.png")
@@ -311,15 +306,13 @@ def graph_affected_ages(age_clean_data):
 
 def graph_affected_sexes(data_frame):
     """Graphs plot showing number of incidents for different victim sexes.
-
     Parameters:
         data_frame: DataFrame of csv file.
-
     Returns:
         None, saves graph.
     """
 
-    data_frame["Victim Sex"].value_counts().plot(kind='bar')
+    data_frame["Victim Sex"].value_counts().plot(kind = 'bar')
     plt.title("Number of Incidents for Victim Sexes")
     plt.ylabel("Number of Incidents")
     plt.savefig("graphs\\number_hom_sex.png")
@@ -328,16 +321,14 @@ def graph_affected_sexes(data_frame):
 
 def graph_affected_races(data_frame):
     """Graphs plot showing number of incidents for different victim races.
-
     Parameters:
         data_frame: DataFrame of csv file.
-
     Returns:
         None, saves graph.
     """
 
-    ax1 = sns.countplot(x="Victim Race", hue="Victim Race", data=data_frame, palette=
-    "colorblind")
+    ax1 = sns.countplot(x = "Victim Race", hue = "Victim Race", data = data_frame, palette =
+                                                                                 "colorblind")
     ax1.legend(loc='upper right')
     plt.title("Number of Incidents for Victim Races")
     plt.xlabel("Victim Races")
@@ -348,19 +339,17 @@ def graph_affected_races(data_frame):
 
 def graph_affected_race_for_state(data_frame, dict_states):
     """For each state, graphs victim race.
-
     Parameters:
         data_frame: DataFrame of csv file.
         dict_states: dictionary of all states
-
     Returns:
         None, saves graph.
     """
 
     abb_st = [val for val in dict_states.values()]
 
-    ax6 = sns.countplot(x="State", hue="Victim Race", data=data_frame, palette=
-    "colorblind")
+    ax6 = sns.countplot(x = "State", hue = "Victim Race", data = data_frame, palette =
+                                                                        "colorblind")
     ax6.set_xticklabels(abb_st)
     ax6.legend(loc='upper right')
     plt.title("Frequency of Victim Race Based on State")
@@ -371,16 +360,14 @@ def graph_affected_race_for_state(data_frame, dict_states):
 
 def graph_weapons_handgun_over_time(data_frame):
     """Graphs number of cases with weapon documented as "handgun". Graphs handgun use over time.
-
     Parameters:
         data_frame: DataFrame of csv file.
-
     Returns:
         None, saves graph.
     """
 
-    ax2 = sns.countplot(x="Year", hue="Weapon", data=data_frame[data_frame["Weapon"] == "Handgun"],
-                        palette="colorblind")
+    ax2 = sns.countplot(x = "Year", hue = "Weapon", data = data_frame[data_frame["Weapon"] == "Handgun"],
+                        palette = "colorblind")
     ax2.legend(loc='upper right')
     plt.title("Use of Handguns over Time")
     plt.xlabel("Years")
@@ -389,37 +376,35 @@ def graph_weapons_handgun_over_time(data_frame):
     plt.clf()
 
 
-def find_incidents_for_states(data_list):
+def find_incidents_for_states(data_list, dict_states):
     """Finds total number of incidents per state.
-
     Parameters:
         data_list: list of dictionaries, each item in list is a row of the CSV file.
-
+        dict_states: dictionary mapping each state name to it's abbreviation. 
     Returns:
-        state_dict: dictionary mapping each state to it's total number of incidents.
+        final_dict: dictionary mapping each state to it's total number of incidents.
     """
 
-    state_dict = dict()
+    final_dict = dict()
 
     for row in data_list:
-        if row["State"] in state_dict.keys():
-            state_dict[row["State"]] += int(row["Incident"])
+        if dict_states[row["State"]] in final_dict.keys():
+            final_dict[dict_states[row["State"]]] += int(row["Incident"])
         else:
-            state_dict[row["State"]] = int(row["Incident"])
+            final_dict[dict_states[row["State"]]] = int(row["Incident"])
 
-    return state_dict
-
+    return final_dict
+    
+    # assert (len(final_dict.keys()) == (dict_states.keys())
 
 def graph_crime_state(state_dict):
     """Graphs total incidents for each state.
-
     Parameters:
         state_dict: dictionary of states mapping to their abbreviation.
-
-
     Returns:
         None, saves graph.
     """
+    
     x_val = list()
     y_val = list()
 
@@ -432,7 +417,7 @@ def graph_crime_state(state_dict):
     pylab.xticks(x, x_val)
     plt.xticks(rotation = 90)
     pylab.bar(x, y_val, color='r')
-    pylab.title("Number of Incidents for all states")
+    pylab.title("Number of Incidents for all States")
     pylab.ylabel("Number of Incidents")
     pylab.xlabel("state")
     pylab.savefig("graphs\incidents_state.png")
@@ -443,25 +428,24 @@ def main():
     """ Will run main program when final_doc.py is run """
 
     print "Welcome to Nanda and Vineeth's data analysis for all US homicides from 1980 - 2014"
-    print "Our data set has more than 600,000 data points, so please bear with us if the program is slow"
-    print
+    print "Our data set has more than 600,000 data points, so please bear with us if the program is slow\n"
 
-    filename = "crime_dataset.csv"
+    filename = "crime_data.csv"
     column_names = ["Victim Sex", "Victim Age", "Victim Race", "Relationship"]
     exclude_points = ["Unknown", "0", "998"]
 
     dict_states = {
-        "Alaska": "AK", "Alabama": "AL", "Arkansas": "AR", "Arizona": "AZ", "California": "CA", "Colorado": "CO",
-        "Connecticut": "CT", "District of Columbia": "DC", "Delaware": "DE", "Florida": "FL", "Georgia": "GA",
-        "Hawaii": "HI", "Iowa": "IA", "Idaho": "ID", "Illinois": "IL", "Indiana": "IN", "Kansas": "KS",
-        "Kentucky": "KY",
-        "Louisiana": "LA", "Massachusetts": "MA", "Maryland": "MD", "Maine": "ME", "Michigan": "MI",
-        "Minnesota": "MN", "Missouri": "MO", "Mississippi": "MS", "Montana": "MT", "North Carolina": "NC",
-        "North Dakota": "ND", "Nebraska": "NE", "New Hampshire": "NH", "New Jersey": "NJ", "New Mexico": "NM",
-        "Nevada": "NV", "New York": "NY", "Ohio": "OH", "Oklahoma": "OK", "Oregon": "OR", "Pennsylvania": "PA",
-        "Puerto Rico": "PR", "Rhode Island": "RI", "South Carolina": "SC", "South Dakota": "SD", "Tennessee": "TN",
-        "Texas": "TX", "Utah": "UT", "Virginia": "VA", "Vermont": "VT", "Washington": "WA", "Wisconsin": "WI",
-        "West Virginia": "WV", "Wyoming": "WY"
+        "Alaska": "AK", "Alabama": "AL", "Arkansas": "AR", "Arizona": "AZ", "California": "CA", 
+        "Colorado": "CO","Connecticut": "CT", "District of Columbia": "DC", "Delaware": "DE", 
+        "Florida": "FL", "Georgia": "GA","Hawaii": "HI", "Iowa": "IA", "Idaho": "ID", "Illinois": "IL", 
+        "Indiana": "IN", "Kansas": "KS", "Kentucky": "KY", "Louisiana": "LA", "Massachusetts": "MA", 
+        "Maryland": "MD", "Maine": "ME", "Michigan": "MI", "Minnesota": "MN", "Missouri": "MO", 
+        "Mississippi": "MS", "Montana": "MT", "North Carolina": "NC", "North Dakota": "ND", 
+        "Nebraska": "NE", "New Hampshire": "NH", "New Jersey": "NJ", "New Mexico": "NM","Nevada": "NV", 
+        "New York": "NY", "Ohio": "OH", "Oklahoma": "OK", "Oregon": "OR", "Pennsylvania": "PA",
+        "Puerto Rico": "PR", "Rhodes Island": "RI", "South Carolina": "SC", "South Dakota": "SD", 
+        "Tennessee": "TN", "Texas": "TX", "Utah": "UT", "Virginia": "VA", "Vermont": "VT", 
+        "Washington": "WA", "Wisconsin": "WI", "West Virginia": "WV", "Wyoming": "WY"
     }
 
     # Extract data from CSV file
@@ -469,25 +453,25 @@ def main():
 
     # Find all data points for victim sex, race, age, and relationship
     data_dict = extract_data_by_categories(data_list, column_names, exclude_points)
-
+    
     # Compare two state modes based on user input
     answer = str(raw_input("Would you like to compare modes for two states? (yes/no) "))
+    assert (answer == "yes" or answer == "no"), "Please type a valid answer!"
+    
     print
     if answer.lower() == "yes":
         states = get_user_states(dict_states)
         print_state_data(data_list, column_names, exclude_points, states)
     else:
-        print "Please wait for the remaining computations!"
-        print
+        print "Please wait for the remaining computations!\n"
 
     # Find most common datum for victim sex, race, age, and relationship
     all_maxes = find_max_of_all(data_dict, column_names)
     print "For all states:"
     print_max_values(all_maxes, column_names)
     print
-
-    print "Please wait, the program is graphing the results"
-    print
+    
+    print "Please wait, the program is graphing the results\n"
 
     print "Plotting Years with spikes...\n"
     # Find incidence rate per month for every year
@@ -497,37 +481,43 @@ def main():
     # Extract data from CSV file as DataFrame
     data_frame = extract_as_dataframe(filename)
 
-    print "Plotting affected victim ages...\n"
+    print "Plotting affected victim ages..."
     # Graph affected victim ages
     age_clean_data = data_frame[data_frame["Victim Age"] != 998]
     age_clean_data = age_clean_data[age_clean_data["Victim Age"] != 99]
     graph_affected_ages(age_clean_data)
-
-    print "Done\nPlotting use of handguns over time... \n"
+    print "Done\n"
+    
+    print "Plotting use of handguns over time..."
     # Graph use of handguns over time
     graph_weapons_handgun_over_time(data_frame)
+    print "Done\n"
 
-    print "Done\nPlotting affected victim sex based on frequency... \n"
+    print "Plotting affected victim sex based on frequency..."
     # Graph affected victim sex based on frequency
     graph_affected_sexes(data_frame)
+    print "Done\n"
 
-    print "Done\nPlotting affected victim races based on frequency...\n"
+    print "Plotting affected victim races based on frequency..."
     # Graph affected victim races based on frequency
     graph_affected_races(data_frame)
+    print "Done\n"
 
-    print "Done\nPlotting affected victim races based on frequency per state...\n"
+    print "Plotting affected victim races based on frequency per state..."
     # Graph affected victim races based on frequency per state
     graph_affected_race_for_state(data_frame, dict_states)
-
-    print "Done\nPlotting total incidents for all states...\n"
+    print "Done\n"
+    
+    print "Plotting total incidents for all states..."
     # Graph all incidents for all states
-    incidents_dict = find_incidents_for_states(data_list)
+    incidents_dict = find_incidents_for_states(data_list, dict_states)
     graph_crime_state(incidents_dict)
+    print "Done\n"
 
-    print "Done\nCheck the folder 'yearly' and 'graphs' for the plots\n"
+    print "Check the folder 'yearly' and 'graphs' for the plots\n"
     print "Terminating...\n"
-    print "Done"
-
+    print "Program complete."
+    
 
 if __name__ == "__main__":
     main()
