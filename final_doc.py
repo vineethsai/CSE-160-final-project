@@ -14,7 +14,6 @@ from collections import Counter
 plt.rcParams["figure.figsize"] = (18, 7)
 pylab.rcParams["figure.figsize"] = (18, 7)
 
-
 def extract_as_list(filename):
     """Opens file, appends each row (as dictionary) into list.
 
@@ -32,7 +31,6 @@ def extract_as_list(filename):
     csv_file.close()
     return output
 
-
 def extract_as_dataframe(filename):
     """Reads in the data of the csv file into DataFrame.
 
@@ -45,7 +43,6 @@ def extract_as_dataframe(filename):
 
     data = pd.read_csv(filename, low_memory = False)
     return data
-
 
 def extract_data_for_months_by_year(data_list):
     """Extracts incidence per month for every year as a dictionary of dictionaries.
@@ -77,7 +74,6 @@ def extract_data_for_months_by_year(data_list):
 
     return output_dict
 
-
 def extract_data_by_categories(data_list, column_names, exclude_points):
     """ Categorizes data points based on which column you want to look at.
 
@@ -101,7 +97,6 @@ def extract_data_by_categories(data_list, column_names, exclude_points):
                     output_dict[name] = [row[name]]
 
     return output_dict
-
 
 def find_mode_of_category(data_dict, column_name):
     """ Given a specific column name, finds the most common data point (mode) and gives
@@ -137,7 +132,6 @@ def find_mode_of_category(data_dict, column_name):
 
     return max_freq_datum
 
-
 def find_max_of_all(data_dict, column_names):
     """ Given multiple column names, finds the modes for each column and their frequencies.
 
@@ -156,7 +150,6 @@ def find_max_of_all(data_dict, column_names):
 
     return output
 
-
 def print_max_values(all_maxes, column_names):
     """Formats list returned from find_max_of_all for printing.
 
@@ -173,7 +166,6 @@ def print_max_values(all_maxes, column_names):
         max_data = all_maxes[val][0]
         percent = format(float(all_maxes[val][1]) * 100, '.2f')
         print "Most affected %s: %s, %s" % (category, max_data, percent) + "%"
-
 
 def extract_data_by_state(data_list, column_names, exclude_points, state_name):
     """Gets most modes for chosen columns for chosen state.
@@ -200,15 +192,14 @@ def extract_data_by_state(data_list, column_names, exclude_points, state_name):
 
     return modes_for_state
 
-
 def print_state_data(data_list, column_names, exclude_points, states):
     """Formats calculated modes for printing.
 
     Parameters:
         data_list: list of dictionaries, each item in list is a row of the CSV file.
         column_names: list of column names as strings that you want to investigate.
-        exclude_points: list of values as strings that are invalid data points such as "Unknown"
-        states: list of states to calculate modes for
+        exclude_points: list of values as strings that are invalid data points such as "Unknown".
+        states: list of states to calculate modes for.
 
     Returns:
         None, prints values for each state chosen.
@@ -220,12 +211,11 @@ def print_state_data(data_list, column_names, exclude_points, states):
         print_max_values(state_modes, column_names)
         print
 
-
 def get_user_states(dict_states):
     """Asks user what states they would like to look at, makes sure that it is a valid state.
 
     Parameters:
-        data_dict: dictionary of states mapping to their abbreviations
+        data_dict: dictionary of states mapping to their abbreviations.
 
     Returns:
         state_list: list of states user selected.
@@ -243,13 +233,14 @@ def get_user_states(dict_states):
 
     return state_list
 
-
-
 def spike_check_visual(year_data):
-    """
-    Orders months in order and checks for years with spikes
-    :param year_data:
-    :return: None
+    """Orders months in chronological order and checks for spikes in total incidents per month.
+    
+    Parameters: 
+        year_data: dictionary of dictionaries, each year mapping to dictionary of months mapping to total incidents.
+    
+    Returns: 
+        None, prints statements.
     """
     year_set = set()
     diff_dict = dict()
@@ -260,7 +251,7 @@ def spike_check_visual(year_data):
         x_val = [None] * 12
         y_val = [None] * 12
 
-        # Order the months in chronological order so when graphing, it does not display randomly
+        # Order the months in chronological order so when graphing, x-axis does not display randomly
         month = ["January", "February", "March", "April", "May", "June", "July", "August", "September",
                  "October", "November", "December"]
         for items in month_data:
@@ -271,10 +262,13 @@ def spike_check_visual(year_data):
 
         # Assigning each difference value with what to print if it becomes one of the three largest spikes.
         for i in range(0, 11):
-            if (y_val[i] * 1.26) <= (y_val[i + 1]):         # we defined spike as an increase in 126%
+            # A spike is defined as an increase in 125% over the time period of one month.
+            if (y_val[i] * 1.25) <= (y_val[i + 1]):         
                 year_set.add(input_year)
                 diff = y_val[i + 1] - y_val[i]
                 diff_dict[diff] = "%s to %s %s" % (x_val[i], x_val[i + 1], input_year)
+       
+        # Graphing only the years in which there was a spike, for visual confirmation. 
         if input_year in year_set:
             graph_spike_year(x_val, y_val, input_year)
 
@@ -283,13 +277,20 @@ def spike_check_visual(year_data):
     print "Three largest spikes in total monthly incidents from 1980 to 2014:"
     for diff in top_three_diff:
         print diff_dict[diff]
-
+    print
 
 def graph_spike_year(x_val, y_val, input_year):
+    """Graphs each year which has a spike.
+    
+    Parameters: 
+        x_val: list of months.
+        y_val: list of total incidents for cooresponding month.
+        input_year: string that is the year which we are to graph.
+        
+    Returns:
+        None, saves graph.
     """
-    Graphs the years which have spikes
-    :return: None
-    """
+    
     pylab.figure(1)
     x = range(12)
     pylab.xticks(x, x_val)
@@ -302,8 +303,10 @@ def graph_spike_year(x_val, y_val, input_year):
 
 def graph_affected_ages(age_clean_data):
     """Graphs plot showing number of incidents for different victim ages.
+    
     Parameters:
         age_clean_data: cleaned DataFrame where age is not 998 or 99 (void values)
+   
     Returns:
         None, saves graph.
     """
@@ -316,11 +319,12 @@ def graph_affected_ages(age_clean_data):
     plt.savefig("graphs\\victim_age.png")
     plt.clf()
 
-
 def graph_affected_sexes(data_frame):
     """Graphs plot showing number of incidents for different victim sexes.
+   
     Parameters:
         data_frame: DataFrame of csv file.
+   
     Returns:
         None, saves graph.
     """
@@ -331,11 +335,12 @@ def graph_affected_sexes(data_frame):
     plt.savefig("graphs\\number_hom_sex.png")
     plt.clf()
 
-
 def graph_affected_races(data_frame):
     """Graphs plot showing number of incidents for different victim races.
+    
     Parameters:
         data_frame: DataFrame of csv file.
+    
     Returns:
         None, saves graph.
     """
@@ -349,12 +354,13 @@ def graph_affected_races(data_frame):
     plt.savefig("graphs\unsolved_hom_race_state.png")
     plt.clf()
 
-
 def graph_affected_race_for_state(data_frame, dict_states):
     """For each state, graphs victim race.
+    
     Parameters:
         data_frame: DataFrame of csv file.
-        dict_states: dict of all states
+        dict_states: dictionary of all states
+    
     Returns:
         None, saves graph.
     """
@@ -370,16 +376,16 @@ def graph_affected_race_for_state(data_frame, dict_states):
     plt.savefig("graphs\hom_race_state.png")
     plt.clf()
 
-
 def graph_weapons_handgun_over_time(data_frame):
-    """
-    Graphs number of cases with weapon documented as "handgun". Graphs handgun
-    use over time.
+    """Graphs number of cases with weapon documented as "handgun". Graphs handgun use over time.
+    
     Parameters:
         data_frame: DataFrame of csv file.
+    
     Returns:
         None, saves graph.
     """
+    
     ax2 = sns.countplot(x = "Year", hue = "Weapon", data = data_frame[data_frame["Weapon"] == "Handgun"],
                         palette = "colorblind")
     ax2.legend(loc = 'upper right')
@@ -388,16 +394,38 @@ def graph_weapons_handgun_over_time(data_frame):
     plt.ylabel("Number of Homicides using Handguns")
     plt.savefig("graphs\handgun_time.png")
     plt.clf()
-
-
+    
+def find_incidents_for_states(data_list):
+    """Finds total number of incidents per state.
+    
+    Parameters: 
+        data_list: list of dictionaries, each item in list is a row of the CSV file.
+        
+    Returns: 
+        state_dict: dictionary mapping each state to it's total number of incidents.
+    """
+    
+    state_dict = dict()
+    
+    for row in data_list: 
+        if row["State"] in state_dict.keys():
+            state_dict[row["State"]] += int(row["Incident"])
+        else:
+            state_dict[row["State"]] = int(row["Incident"])
+            
+    return state_dict
+        
 def graph_crime_state(data_frame, dict_states):
-
+    """Graphs total incidents for each state. 
+    
+    Parameters: 
+        dict_states: dictionary of states mapping to their abbreviation.
+        data_frame: DataFrame of csv file.
+        
+    Returns: 
+        None, saves graph.
     """
-    Graphs crime in all states
-    :param dict_states: dict of all states
-    :param data_frame: data frame to be graphed
-    :return: None
-    """
+    
     states = dict(Counter(data_frame[data_frame["Weapon"] == "Handgun"]["State"].values))
     abb_st = [val for val in dict_states.values()]
     ax70 = sns.countplot(x = "State", hue = "Weapon", data = data_frame)
@@ -408,22 +436,21 @@ def graph_crime_state(data_frame, dict_states):
     plt.savefig("graphs\incidents_state.png")
     plt.clf()
 
-
 def main():
     """ Will run main program when final_doc.py is run """
 
-    print "Welcome to US homocide data analysis by Vineeth and Nanda"
+    print "Welcome to Nanda and Vineeth's data analysis for all US homicides from 1980 - 2014"
     print "Our data set has more than 600,000 data points, so please bear with us if the program is slow"
-    print "Enjoy"
-    filename = "crime_dataset.csv"
+    print
+    
+    filename = "crime_data.csv"
     column_names = ["Victim Sex", "Victim Age", "Victim Race", "Relationship"]
     exclude_points = ["Unknown", "0", "998"]
 
     dict_states = {
         "Alaska": "AK", "Alabama": "AL", "Arkansas": "AR", "Arizona": "AZ", "California": "CA", "Colorado": "CO",
         "Connecticut": "CT", "District of Columbia": "DC", "Delaware": "DE", "Florida": "FL", "Georgia": "GA",
-        "Hawaii": "HI", "Iowa": "IA", "Idaho": "ID", "Illinois": "IL", "Indiana": "IN", "Kansas": "KS",
-        "Kentucky": "KY",
+        "Hawaii": "HI", "Iowa": "IA", "Idaho": "ID", "Illinois": "IL", "Indiana": "IN", "Kansas": "KS","Kentucky": "KY",
         "Louisiana": "LA", "Massachusetts": "MA", "Maryland": "MD", "Maine": "ME", "Michigan": "MI",
         "Minnesota": "MN", "Missouri": "MO", "Mississippi": "MS", "Montana": "MT", "North Carolina": "NC",
         "North Dakota": "ND", "Nebraska": "NE", "New Hampshire": "NH", "New Jersey": "NJ", "New Mexico": "NM",
@@ -438,9 +465,10 @@ def main():
 
     # Find all data points for victim sex, race, age, and relationship
     data_dict = extract_data_by_categories(data_list, column_names, exclude_points)
-
+    
     # Compare two state modes based on user input
     answer = str(raw_input("Would you like to compare modes for two states? (yes/no) "))
+    print
     if answer.lower() == "yes":
         states = get_user_states(dict_states)
         print_state_data(data_list, column_names, exclude_points, states)
@@ -454,9 +482,8 @@ def main():
     print_max_values(all_maxes, column_names)
     print
 
-    print
     print "Please wait, the program is graphing the results"
-    print "Thank you for your patience"
+    print
 
     # Find incidence rate per month for every year
     year_data = extract_data_for_months_by_year(data_list)
@@ -482,11 +509,12 @@ def main():
     # Graph affected victim races based on frequency per state
     graph_affected_race_for_state(data_frame, dict_states)
 
-    # Graphs all incidents for all states
+    # Graph all incidents for all states
     graph_crime_state(data_frame, dict_states)
 
     print "Check the folder 'yearly' and 'graphs' for the graphs"
-    print "Thank you"
+    print
+    print "Done"
 
 if __name__ == "__main__":
     main()
