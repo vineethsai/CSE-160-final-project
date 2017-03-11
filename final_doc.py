@@ -530,7 +530,6 @@ def main():
     print "Done\n"
 
     print "Check the folder 'yearly' and 'graphs' for the plots\n"
-    print "Terminating...\n"
     print "Program complete."
     
 
