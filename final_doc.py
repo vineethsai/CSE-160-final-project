@@ -10,8 +10,8 @@ import pylab
 import pandas as pd
 import seaborn as sns
 
-plt.rcParams["figure.figsize"] = (18, 8)
-pylab.rcParams["figure.figsize"] = (18, 8)
+plt.rcParams["figure.figsize"] = (16, 8)
+pylab.rcParams["figure.figsize"] = (16, 8)
 
 
 def extract_as_list(filename):
@@ -259,7 +259,7 @@ def spike_check_visual(year_data):
         if input_year in year_set:
             graph_spike_year(x_val, y_val, input_year)
 
-    top_three_diff = sorted(diff_dict.keys())[0:3]
+    top_three_diff = sorted(diff_dict.keys(), reverse = True)[0:3]
     print "Three largest spikes in total monthly incidents from 1980 to 2014:"
     for diff in top_three_diff:
         print diff_dict[diff]
@@ -529,7 +529,7 @@ def main():
     graph_affected_race_for_state(data_frame, dict_states)
     print "Done\n"
 
-    print "\nCheck the folder 'yearly' and 'graphs' for the plots\n"
+    print "Check the folder 'yearly' and 'graphs' for the plots\n"
     print "Terminating...\n"
     print "Program complete."
     
