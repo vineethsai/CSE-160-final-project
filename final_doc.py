@@ -295,8 +295,8 @@ def graph_affected_ages(age_clean_data):
         None, saves graph.
     """
 
-    age_clean_data["Victim Age"].value_counts().sort_index(ascending=True).plot(kind = "bar",
-                                                                                color = "purple")
+    age_clean_data["Victim Age"].value_counts().sort_index(ascending = True).plot(kind = "bar",
+                                                                                  color = "purple")
     plt.title("Number of Incidents for Victim Ages")
     plt.xlabel("Ages")
     plt.ylabel("Number of Incidents")
@@ -318,43 +318,18 @@ def graph_affected_sexes(data_frame):
     plt.savefig("graphs\\number_hom_sex.png")
     plt.clf()
 
-
-def graph_affected_races(data_frame):
-    """Graphs plot showing number of incidents for different victim races.
+def graph_unsolved_cases_per_year(data_frame):
+    """Graphs plot showing number of unsolved cases from 1980 to 2014.
     Parameters:
         data_frame: DataFrame of csv file.
     Returns:
         None, saves graph.
     """
-
-    ax1 = sns.countplot(x = "Victim Race", hue = "Victim Race", data = data_frame, palette =
-                                                                                 "colorblind")
-    ax1.legend(loc='upper right')
-    plt.title("Number of Incidents for Victim Races")
-    plt.xlabel("Victim Races")
-    plt.ylabel("Number of Incidents")
-    plt.savefig("graphs\unsolved_hom_race_state.png")
-    plt.clf()
-
-
-def graph_affected_race_for_state(data_frame, dict_states):
-    """For each state, graphs victim race.
-    Parameters:
-        data_frame: DataFrame of csv file.
-        dict_states: dictionary of all states
-    Returns:
-        None, saves graph.
-    """
-
-    abb_st = [val for val in dict_states.values()]
-
-    ax6 = sns.countplot(x = "State", hue = "Victim Race", data = data_frame, palette =
-                                                                        "colorblind")
-    ax6.set_xticklabels(abb_st)
-    ax6.legend(loc='upper right')
-    plt.title("Frequency of Victim Race Based on State")
-    plt.ylabel("Number of Incidents")
-    plt.savefig("graphs\hom_race_state.png")
+    
+    unsolved = data_frame[data_frame["Crime Solved"] != "Yes"]
+    unsolved['Year'].value_counts().sort_index(ascending = True).plot(kind = 'line', color = "Red")
+    plt.title('Number of Unsolved Homicides: 1980 to 2014')
+    plt.savefig("graphs\unsolved_hom.png")
     plt.clf()
 
 
@@ -518,17 +493,12 @@ def main():
     # Graph affected victim sex based on frequency
     graph_affected_sexes(data_frame)
     print "Done\n"
-
-    print "Plotting affected victim races based on frequency..."
-    # Graph affected victim races based on frequency
-    graph_affected_races(data_frame)
+    
+    print "Plotting number of unsolved cases..."
+    # Graph number of unsolved cases from 1980 to 2014
+    graph_unsolved_cases_per_year(data_frame)
     print "Done\n"
-
-    print "Plotting affected victim races based on frequency per state..."
-    # Graph affected victim races based on frequency per state
-    graph_affected_race_for_state(data_frame, dict_states)
-    print "Done\n"
-
+    
     print "Check the folder 'yearly' and 'graphs' for the plots\n"
     print "Program complete."
     
