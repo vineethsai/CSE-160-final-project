@@ -255,7 +255,7 @@ labeled for each incident, with a total of 638,455 cases:
 
 ## <span class="underline">Methodology (python code):</span>
 
-To find most common victim age, race, and sex, and relationship:
+### To find most common victim age, race, and sex, and relationship:
 
 1\. First, look through each row of the file. Each row of the file
 will include the column name with its respective value for that case
@@ -269,23 +269,21 @@ category would accumulate every single valid age.
 common value of the data points associated with each column of
 interest.
 
-To find most common victim age, race, sex, and relationship for an
+### To find most common victim age, race, sex, and relationship for an
 individual state:
 
 1\. Using the same method as above, find the modes for selected
 categories, but first categorize by state. Look through data file and
 accumulate modes for each category for each state.
 
-For finding spikes of incidents:
+### For finding spikes of incidents:
 
 1\. First look through each row of the file—each row has the number of
 incidents for that case number. For every year from 1980 to 2014
 accumulate the total incidents per month for that year.
 
 2\. Using the incident values from month to month, compare each value
-with next value. If the next
-
-value is equal to or greater than 150% of the previous value, then
+with next value. If the next value is equal to or greater than 150% of the previous value, then
 that indicates that there is a spike in the data.
 
 3\. Record the months in which the spike took place between. For
@@ -293,7 +291,7 @@ example, if the total incidents for March totaled up to 150% times the
 total incidents for February in the year 1991, record that there is a
 spike from February to March of 1991.
 
-To find three highest spikes:
+###  To find three highest spikes:
 
 1\. When you find that there is a “spike” between two months, keep
 track of how much the count
@@ -310,7 +308,7 @@ Accumulate total number of these cases for every year.
 year. Look at trend in graph to see if number of cases increases or
 decreases.
 
-To find which states have the highest number of incidents:
+### To find which states have the highest number of incidents:
 
 1\. Look through each row of the csv file. For every state accumulate
 incident totals. Graph incident totals vs. state.
@@ -320,10 +318,11 @@ which states have lowest incidents.
 
 ## Results
 
-### 1\. What is the most common victim age, sex, and race affected in the
-entire US?
+### 1\. What is the most common victim age, sex, and race affected in the entire US?
 
-![](media/image1.jpeg)From my data, I found that the most common
+![](media/i6.png)
+
+From my data, I found that the most common
 victim age was 22 at 3.66%, most common victim sex is Male at 77.51%,
 and most common victim race was White at 50.24%. In theory that would
 mean that the most at-risk demographic would be white males who are
@@ -336,8 +335,7 @@ US, as there could be different demographics more at risk in different
 parts of the US. Below are two graphs that show the number of
 incidents for each sex, and number of incidents for ages 0-98.
 
-### 2\. What is the state which has the highest number of incidents? What
-is the state with the lowest number?
+### 2\. What is the state which has the highest number of incidents? What is the state with the lowest number?
 
 The state with the highest total incidents from 1980 – 2014 was
 Florida, and the state with the lowest number was North Dakota. North
@@ -361,10 +359,9 @@ Below is a graph of the incident count for every state in the US. This
 graph shows better how there is a great difference between the states
 with the first and second highest total incidents.
 
-![](media/image3.jpeg)
+![](media/i7.jpg)
 
-### 3\. Are specific relationships between perpetrator and victim more
-susceptible? Such as wife- husband, or boyfriend-girlfriend?
+### 3\. Are specific relationships between perpetrator and victim more susceptible? Such as wife- husband, or boyfriend-girlfriend?
 
 The most common relationship that I found was “acquaintance,” meaning
 that the victim and perpetrator may have known each other but were not
@@ -413,10 +410,9 @@ Inserted below are the graphs for the years 1983 and 2007, where you
 can clearly see the spikes. In the program, the graphs for all years
 with spikes are saved, so you can look at those graphs as well.
 
-![](media/image4.jpeg)Page 6
+![](media/i8.png)
 
-### 5\. How do most common victim race, age, and sex vary between two
-states? Such as Florida and
+### 5\. How do most common victim race, age, and sex vary between two states? Such as Florida and
 
 Washington? California and Maine? How does victim race vary over all
 the states?
@@ -464,7 +460,7 @@ high. Long-term solutions were implemented these years—involving
 reducing number of youth involved in gang activity, which could
 attribute to this decline in gun use after the mid-90’s.
 
-![](media/image6.jpeg)
+![](media/i9.jpg)
 
 ## Testing
 
