@@ -1,4 +1,4 @@
-**Investigating Crime Information in the United States from 1980 to
+# **Investigating Crime Information in the United States from 1980 to
 2014**
 
 ## <span class="underline">Motivation and Background:</span>
