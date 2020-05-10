@@ -320,7 +320,7 @@ which states have lowest incidents.
 
 ### 1\. What is the most common victim age, sex, and race affected in the entire US?
 
-![](media/i6.png)
+![](media/i6.PNG)
 
 From my data, I found that the most common
 victim age was 22 at 3.66%, most common victim sex is Male at 77.51%,
@@ -410,14 +410,14 @@ Inserted below are the graphs for the years 1983 and 2007, where you
 can clearly see the spikes. In the program, the graphs for all years
 with spikes are saved, so you can look at those graphs as well.
 
-![](media/i8.png)
+![](media/i8.PNG)
 
 ### 5\. How do most common victim race, age, and sex vary between two states? Such as Florida and
 
 Washington? California and Maine? How does victim race vary over all
 the states?
 
-a. Between Florida and Washington:
+1. Between Florida and Washington:
 
 i. Washington: Age: 22 at 3.47%, Race: White at 50.24%, Sex: Male at
 77.51%
@@ -425,7 +425,7 @@ i. Washington: Age: 22 at 3.47%, Race: White at 50.24%, Sex: Male at
 ii. Florida: Age: 25 at 3.30%, Race: White at 55.04%, Sex: Male at
 75.31%
 
-b. Between California and Georgia:
+2. Between California and Georgia:
 
 i. California: Age: 20 at 4.31%, Race: White at 66.08%, Sex: Male at
 81.21%
